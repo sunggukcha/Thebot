@@ -1,32 +1,40 @@
-#include "ThebotModule.h"
+// AUTHOR: Sungguk Cha, UNIST, Ulsan, South Korea
+// e-Mail: navinad@naver.com
+//
+//
+//
+
+
 #include <BWAPI.h>
+#include "ThebotModule.h"
 
 using namespace BWAPI;
 using namespace BWTA;
 using namespace Filter;
 using namespace std;
 
-bool debug = false;
 
 void ThebotModule::onStart()
 {
 	Broodwar->enableFlag(Flag::UserInput);
 	Broodwar->setCommandOptimizationLevel(2);
 
+	race = Broodwar->self()->getRace();
+
 	BWTA::readMap();
-	BWTA::analyze();
+	//BWTA::analyze();
 
 	//for (auto &base : BWTA::getBaseLocations()) manager.push(base->getTilePosition());
 	//manager.start();
 }
 void ThebotModule::onFrame()
 {
+	refresh();
 	//manager.refresh(debug);
 }
 void ThebotModule::onSendText(std::string text)
 {
 	if (text == "/debug"){
-		debug = true;
 		Broodwar << "Debug mode on" << std::endl;
 		Broodwar << Broodwar->enemy()->getRace().c_str() << endl;
 	}
@@ -64,11 +72,25 @@ void ThebotModule::onUnitCreate(BWAPI::Unit unit)
 }
 void ThebotModule::onUnitComplete(BWAPI::Unit unit)
 {
-	//manager.push(unit);
+	if (race == Races::Terran)
+		terran.push(unit);
+	/*
+	else if (race == Races::Zerg)
+	zerg.refresh();
+	else if (race == Races::Protoss)
+	protoss.refresh();
+	*/
 }
 void ThebotModule::onUnitDestroy(BWAPI::Unit unit)
 {
-	//manager.pop(unit);
+	if (race == Races::Terran)
+		terran.pop(unit);
+	/*
+	else if (race == Races::Zerg)
+	zerg.refresh();
+	else if (race == Races::Protoss)
+	protoss.refresh();
+	*/
 }
 void ThebotModule::onUnitMorph(BWAPI::Unit unit)
 {
@@ -84,4 +106,15 @@ void ThebotModule::onSaveGame(std::string gameName)
 void ThebotModule::onEnd(bool isWinner)
 {
 	//manager.end(isWinner);
+}
+
+void ThebotModule::refresh(){
+	if (race == Races::Terran)
+		terran.refresh();
+	/*
+	else if (race == Races::Zerg)
+		zerg.refresh();
+	else if (race == Races::Protoss)
+		protoss.refresh();
+	*/
 }
