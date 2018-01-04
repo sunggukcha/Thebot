@@ -1,8 +1,9 @@
 #pragma once
 #include <BWAPI.h>
 #include <iostream>
-#include "tWorker.h"
+#include "tPlayManager.h"
 #include "tBuilding.h"
+#include "tWorker.h"
 #include "tBus.h"
 
 using namespace BWAPI;
@@ -13,9 +14,11 @@ private:
 	unsigned mineral;
 	unsigned gas;
 private:
+	tPlaymanager playmanager;
 	tWorker worker;
 	tBuilding building;
 public:
+	tManager(){ mineral = gas = 0; }
 	void refresh();
 	void push(Unit);
 	void pop(Unit);

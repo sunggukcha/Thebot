@@ -7,6 +7,7 @@ using namespace Filter;
 using namespace std;
 
 void tManager::refresh(){
+	Bus bus = playmanager.refresh(res());
 	worker.refresh();
 }
 

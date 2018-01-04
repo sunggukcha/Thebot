@@ -12,6 +12,23 @@ struct BuildBus{
 	TechType TT;
 };
 
+struct WorkerBus{
+	unsigned busno;
+
+};
+
+struct SquadBus{
+	unsigned busno;
+
+};
+
+struct Bus{
+	unsigned busno;
+	BuildBus bb;
+	WorkerBus wb;
+	SquadBus sb;
+};
+
 struct Resource{
 	unsigned mineral;
 	unsigned gas;
