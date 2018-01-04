@@ -22,7 +22,7 @@ void ThebotModule::onStart()
 	race = Broodwar->self()->getRace();
 
 	BWTA::readMap();
-	//BWTA::analyze();
+	BWTA::analyze();
 
 	//for (auto &base : BWTA::getBaseLocations()) manager.push(base->getTilePosition());
 	//manager.start();
