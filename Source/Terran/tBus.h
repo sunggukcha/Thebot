@@ -11,3 +11,10 @@ struct BuildBus{
 	UpgradeType UpT;
 	TechType TT;
 };
+
+struct Resource{
+	unsigned mineral;
+	unsigned gas;
+	Resource(){}
+	Resource(int m, int g) :mineral(m), gas(g){}
+};

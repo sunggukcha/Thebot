@@ -1,3 +1,5 @@
+// ADD-ON SHOULD BE IMPLEMENTED HERE
+
 #include <iostream>
 #include <BWAPI.h>
 #include <string>
@@ -6,7 +8,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
-void tBuilding::refresh(BuildBus bb){
+Resource tBuilding::refresh(BuildBus bb){
 	if (bb.busno > busno){
 		if (bb.UpT != UpgradeTypes::None)
 			uporder.push_back(bb.UpT);
@@ -16,9 +18,12 @@ void tBuilding::refresh(BuildBus bb){
 			rorder.push_back(bb.TT);
 		busno = bb.busno;
 	} // ONLY NEW PLAN SHOULD BE REQURESTED BY PLAYMANAGER
+	mineral = gas = 0;
 	train();
 	upgrade();
+	research();
 	//must return reserved orders to playmanager 
+	Resource res(mineral, gas);
 }
 
 void tBuilding::train(){
@@ -34,7 +39,11 @@ void tBuilding::train(){
 					break;
 				}
 			}
-			if (!made) torder.push_back(ut);
+			if (!made){
+				torder.push_back(ut);
+				mineral += ut.mineralPrice();
+				gas += ut.gasPrice();
+			}
 		}
 	}
 	uorder = torder;
@@ -53,10 +62,37 @@ void tBuilding::upgrade(){
 					break;
 				}
 			}
-			if (!made) torder.push_back(ut);
+			if (!made){
+				torder.push_back(ut);
+				mineral += ut.mineralPrice();
+				gas += ut.gasPrice();
+			}
 		}
 	}
 	uporder = torder;
+}
+
+void tBuilding::research(){
+	vector<TechType> torder;
+	for (auto& ut : rorder){
+		UnitType UT = ut.whatResearches();
+		if (table.find(UT) != table.end()){ // if there are buildings that can produce
+			bool made = false;
+			for (auto& u : table[UT]){
+				if (u->canResearch(ut)){
+					u->research(ut);
+					made = true;
+					break;
+				}
+			}
+			if (!made){
+				torder.push_back(ut);
+				mineral += ut.mineralPrice();
+				gas += ut.gasPrice();
+			}
+		}
+	}
+	rorder = torder;
 }
 
 void tBuilding::push(Unit u){

@@ -13,10 +13,14 @@ private:
 	vector<UnitType> uorder;
 	vector<UpgradeType> uporder;
 	vector<TechType> rorder;
+private:
+	unsigned mineral;
+	unsigned gas;
 public:
-	void refresh(BuildBus);
+	Resource refresh(BuildBus);
 	void train();
 	void upgrade();
+	void research();
 	void push(Unit);		// COMPLETE
 	void pop(Unit);			// DESTROY
 public:
