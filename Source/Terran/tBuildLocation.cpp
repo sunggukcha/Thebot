@@ -19,11 +19,11 @@ TilePosition tBuildLocation::getML(){
 	return *TI;
 }
 
-bool tBuildLocation::ok(TilePosition T, UnitType UT = UnitTypes::Zerg_Defiler_Mound){
+bool tBuildLocation::ok(TilePosition T, UnitType UT = UnitTypes::Terran_Barracks){
 	vector<TilePosition>::iterator TI;
 	for (TI = multilocations.begin(); TI != multilocations.end(); TI++){
 		TilePosition P1 = *TI;
-		TilePosition P2 = P1 + UnitTypes::Zerg_Defiler_Mound.tileSize();
+		TilePosition P2 = P1 + UnitTypes::Terran_Barracks.tileSize();
 		if (P1.x - UT.tileWidth() + unitX <= T.x && T.x <= P2.x - unitX &&
 			P1.y - UT.tileHeight() + unitY <= T.y && T.y <= P2.y - unitY) return false;
 	}
@@ -47,13 +47,14 @@ bool tBuildLocation::isML(TilePosition T){
 /*functions for tBuildLocation*/
 void tBuildLocation::Update(Unit center){ // Updating Bulidable Locations with BFS
 	int N = buildlocations.size();
+	Broodwar->drawTextScreen(0, 15, "BL SIZE: %d", N);
 	for (int i = 0; i < N; i++){ // filter inappropriate locations
 		tuple<Unit, TilePosition> tupe = buildlocations.front();
 		TilePosition tile;
 		Unit c;
 		tie(c, tile) = tupe;
 		buildlocations.pop();
-		if (!Broodwar->canBuildHere(tile, UnitTypes::Zerg_Defiler_Mound) || !ok(tile) || !c) continue;
+		if (!Broodwar->canBuildHere(tile, UnitTypes::Terran_Barracks) || !ok(tile) || !c) continue;
 		if (!c->exists()) continue;
 		buildlocations.push(tupe);
 		Position a, b;
@@ -66,10 +67,18 @@ void tBuildLocation::Update(Unit center){ // Updating Bulidable Locations with B
 	}
 	if (buildlocations.size() == 0){
 		TilePosition tile;
-		if (center) tile = Broodwar->getBuildLocation(UnitTypes::Zerg_Spawning_Pool, center->getTilePosition(), 10);
+		if (center) tile = Broodwar->getBuildLocation(UnitTypes::Terran_Barracks, center->getTilePosition(), 10);
 		if (tile){
 			tuple<Unit, TilePosition> tupe = make_tuple(center, tile);
 			buildlocations.push(tupe);
+
+			Position a, b;
+			a = (Position)tile;
+			b = (Position)(tile + UnitTypes::Terran_Barracks.tileSize());
+			Broodwar->registerEvent([a, b](Game*)
+			{
+				Broodwar->drawBoxMap(a, b, Colors::Red);
+			}, nullptr, Broodwar->getLatencyFrames() + 1);
 		}
 	}
 	else if(buildlocations.size() < 5){
@@ -85,7 +94,17 @@ void tBuildLocation::Update(Unit center){ // Updating Bulidable Locations with B
 				TilePosition A;
 				A.x = tile.x + units[j][0] * 5 * unitX;
 				A.y = tile.y + units[j][1] * 4 * unitY;
-				if (Broodwar->canBuildHere(A, UnitTypes::Zerg_Defiler_Mound) && ok(A)) buildlocations.push(make_tuple(c, A));
+				if (Broodwar->canBuildHere(A, UnitTypes::Terran_Barracks) && ok(A)){
+					buildlocations.push(make_tuple(c, A));
+
+					Position a, b;
+					a = (Position)tile;
+					b = (Position)(tile + UnitTypes::Terran_Barracks.tileSize());
+					Broodwar->registerEvent([a, b](Game*)
+					{
+						Broodwar->drawBoxMap(a, b, Colors::Red);
+					}, nullptr, Broodwar->getLatencyFrames() + 1);
+				}
 			}
 		}
 		if (N == buildlocations.size()){
@@ -93,7 +112,17 @@ void tBuildLocation::Update(Unit center){ // Updating Bulidable Locations with B
 			TilePosition tile;
 			if (center) tile = Broodwar->getBuildLocation(UnitTypes::Terran_Barracks, center->getTilePosition(), 10);
 			tupe = make_tuple(center, tile);
-			if (tile) buildlocations.push(tupe);
+			if (tile){
+				buildlocations.push(tupe);
+
+				Position a, b;
+				a = (Position)tile;
+				b = (Position)(tile + UnitTypes::Terran_Barracks.tileSize());
+				Broodwar->registerEvent([a, b](Game*)
+				{
+					Broodwar->drawBoxMap(a, b, Colors::Red);
+				}, nullptr, Broodwar->getLatencyFrames() + 1);
+			}
 		}
 	}
 }

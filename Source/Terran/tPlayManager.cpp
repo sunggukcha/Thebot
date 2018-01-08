@@ -17,8 +17,8 @@ Bus tPlaymanager::test(Resource r){
 		res.bb.UT = UnitTypes::Terran_SCV;
 	}
 	if (Broodwar->self()->supplyTotal() == Broodwar->self()->supplyUsed() && Broodwar->self()->supplyTotal() < 400 && r.mineral <= 600){
-		res.wb.busno = ++busno;
-		res.wb.UT = UnitTypes::Terran_Supply_Depot;
+		res.cb.busno = ++busno;
+		res.cb.UT = UnitTypes::Terran_Supply_Depot;
 	}
 	return res;
 }

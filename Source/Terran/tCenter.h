@@ -17,6 +17,7 @@ private:
 	vector<Unit> centre;
 	tBuildLocation buildlocation;
 public:
+	WorkerBus refresh(CentreBus);
 	Unit rcentre();
 	void start(){ buildlocation.start(); }
 	void push(Unit);

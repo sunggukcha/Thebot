@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <BWAPI.h>
+#include "tBuildLocation.h"
 
 using namespace std;
 using namespace BWAPI;
@@ -14,9 +15,17 @@ struct BuildBus{
 	BuildBus(){ UT = UnitTypes::None; UpT = UpgradeTypes::None; TT = TechTypes::None; }
 };
 
-struct WorkerBus{
+struct CentreBus{
 	unsigned busno;
 	UnitType UT;
+	CentreBus(){}
+	CentreBus(unsigned bno, UnitType ut) : busno(bno), UT(ut) {}
+};
+
+struct WorkerBus : CentreBus{
+	WorkerBus(){}
+	WorkerBus(CentreBus cb) : CentreBus(cb.busno, cb.UT) {}
+	tBuildLocation BL;
 };
 
 struct SquadBus{
@@ -27,7 +36,7 @@ struct SquadBus{
 struct Bus{
 	unsigned busno;
 	BuildBus bb;
-	WorkerBus wb;
+	CentreBus cb;
 	SquadBus sb;
 };
 

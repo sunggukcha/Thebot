@@ -7,9 +7,10 @@ using namespace Filter;
 using namespace std;
 
 void tManager::refresh(){
-	Bus bus = playmanager.refresh(res());
-	add(building.refresh(bus.bb));
-	add(worker.refresh(bus.wb));
+	// PM -> BUILD -> CENTRE -> WORKER -> SQUAD
+	Bus bus = playmanager.refresh(res()); // PM
+	add(building.refresh(bus.bb)); // BUILD
+	add(worker.refresh(centre.refresh(bus.cb))); // CENTRE -> WORKER
 }
 
 void tManager::push(Unit u){
