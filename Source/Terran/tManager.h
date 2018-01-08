@@ -19,6 +19,7 @@ private:
 	tBuilding building;
 public:
 	tManager(){ mineral = gas = 0; }
+	void start(){}
 	void refresh();
 	void push(Unit);
 	void pop(Unit);

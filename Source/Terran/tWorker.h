@@ -1,21 +1,25 @@
 #pragma once
 #include <BWAPI.h>
 #include <iostream>
+#include "tBus.h"
 
 using namespace BWAPI;
 using namespace std;
 
 class tWorker{
 private:
+	unsigned busno;
 	vector<Unit> SCV; // MINING SCV
 	vector<Unit> SCB; // BUILDING SCV; INCLUDES SCV ABOUT TO BUILD
 public: // Unit bus
 	void push(Unit);
 	void pop(Unit);
 public: // Manager functions
-	void refresh();
+	tWorker(){ busno = 0; }
+	Resource refresh(WorkerBus);
 private:
 	void mine();
+	Resource build(WorkerBus);
 
 	/*
 public:

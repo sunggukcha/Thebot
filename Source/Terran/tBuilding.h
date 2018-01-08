@@ -16,13 +16,15 @@ private:
 private:
 	unsigned mineral;
 	unsigned gas;
-public:
-	Resource refresh(BuildBus);
 	void train();
 	void upgrade();
 	void research();
+public:
+	Resource refresh(BuildBus);
+	/*
 	void push(Unit);		// COMPLETE
 	void pop(Unit);			// DESTROY
+	*/
 public:
 	tBuilding(){ busno = 0; }
 };

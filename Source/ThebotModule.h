@@ -31,6 +31,7 @@ private:
 	Race race;
 	tManager terran;
 private:
+	void start();
 	void refresh();
 	void push(Unit);
 	void pop(Unit);

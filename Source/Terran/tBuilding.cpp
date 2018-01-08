@@ -18,12 +18,14 @@ Resource tBuilding::refresh(BuildBus bb){
 			rorder.push_back(bb.TT);
 		busno = bb.busno;
 	} // ONLY NEW PLAN SHOULD BE REQURESTED BY PLAYMANAGER
+	table = bb.table;
 	mineral = gas = 0;
 	train();
 	upgrade();
 	research();
 	//must return reserved orders to playmanager 
 	Resource res(mineral, gas);
+	return res;
 }
 
 void tBuilding::train(){
@@ -94,7 +96,7 @@ void tBuilding::research(){
 	}
 	rorder = torder;
 }
-
+/*
 void tBuilding::push(Unit u){
 	UnitType UT = u->getType();
 	if (table.find(UT) == table.end()){
@@ -112,3 +114,4 @@ void tBuilding::pop(Unit u){
 	if (UI != table[UT].end())
 		table[UT].erase(UI);
 }
+*/

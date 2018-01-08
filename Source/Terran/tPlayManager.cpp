@@ -9,11 +9,7 @@ using namespace Filter;
 Bus tPlaymanager::refresh(Resource r){
 	return test(r);
 }
-/*
-if (Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed() + (BUILD.getsup() + Building_depot_number) * 16  <
-	4 * (Building_centres - Saturated_centres + Building_factories) &&
-	Broodwar->self()->supplyTotal() + (BUILD.getsup() + Building_depot_number) * 16 < 400 && (!first_depot || Building_centres >= 1)){
-	*/
+
 Bus tPlaymanager::test(Resource r){
 	Bus res;
 	if (Broodwar->self()->minerals() - r.mineral > 0 && r.mineral <= 500){

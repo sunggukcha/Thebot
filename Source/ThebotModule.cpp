@@ -23,9 +23,7 @@ void ThebotModule::onStart()
 
 	BWTA::readMap();
 	BWTA::analyze();
-
-	//for (auto &base : BWTA::getBaseLocations()) manager.push(base->getTilePosition());
-	//manager.start();
+	start();
 }
 void ThebotModule::onFrame()
 {
@@ -106,6 +104,17 @@ void ThebotModule::onSaveGame(std::string gameName)
 void ThebotModule::onEnd(bool isWinner)
 {
 	//manager.end(isWinner);
+}
+
+void ThebotModule::start(){
+	if (race == Races::Terran)
+		terran.start();
+	/*
+	else if (race == Races::Zerg)
+	zerg.refresh();
+	else if (race == Races::Protoss)
+	protoss.refresh();
+	*/
 }
 
 void ThebotModule::refresh(){

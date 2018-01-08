@@ -8,7 +8,8 @@ using namespace std;
 
 void tManager::refresh(){
 	Bus bus = playmanager.refresh(res());
-	worker.refresh();
+	add(building.refresh(bus.bb));
+	add(worker.refresh(bus.wb));
 }
 
 void tManager::push(Unit u){

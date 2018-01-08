@@ -6,8 +6,9 @@ using namespace BWAPI;
 using namespace Filter;
 using namespace std;
 
-void tWorker::refresh(){
+Resource tWorker::refresh(WorkerBus wb){
 	mine();
+	return build(wb);
 }
 
 void tWorker::mine(){
@@ -19,6 +20,11 @@ void tWorker::mine(){
 			}
 		}
 	}
+}
+
+Resource tWorker::build(WorkerBus wb){
+	Resource r;
+	return r;
 }
 
 void tWorker::push(Unit u)
