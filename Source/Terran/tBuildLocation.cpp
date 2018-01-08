@@ -58,7 +58,7 @@ void tBuildLocation::Update(Unit center){ // Updating Bulidable Locations with B
 		buildlocations.push(tupe);
 		Position a, b;
 		a = (Position)tile;
-		b = (Position)(tile + UnitTypes::Zerg_Defiler_Mound.tileSize());
+		b = (Position)(tile + UnitTypes::Terran_Barracks.tileSize());
 		Broodwar->registerEvent([a, b](Game*)
 		{
 			Broodwar->drawBoxMap(a, b, Colors::Blue);
@@ -83,15 +83,15 @@ void tBuildLocation::Update(Unit center){ // Updating Bulidable Locations with B
 			buildlocations.push(tupe);
 			for (int j = 0; j < 4; j++){
 				TilePosition A;
-				A.x = tile.x + units[j][0] * 4 * unitX;
-				A.y = tile.y + units[j][1] * 3 * unitY;
+				A.x = tile.x + units[j][0] * 5 * unitX;
+				A.y = tile.y + units[j][1] * 4 * unitY;
 				if (Broodwar->canBuildHere(A, UnitTypes::Zerg_Defiler_Mound) && ok(A)) buildlocations.push(make_tuple(c, A));
 			}
 		}
 		if (N == buildlocations.size()){
 			tuple<Unit, TilePosition> tupe;
 			TilePosition tile;
-			if (center) tile = Broodwar->getBuildLocation(UnitTypes::Zerg_Defiler_Mound, center->getTilePosition(), 10);
+			if (center) tile = Broodwar->getBuildLocation(UnitTypes::Terran_Barracks, center->getTilePosition(), 10);
 			tupe = make_tuple(center, tile);
 			if (tile) buildlocations.push(tupe);
 		}

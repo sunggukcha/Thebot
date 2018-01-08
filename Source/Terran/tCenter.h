@@ -17,6 +17,7 @@ private:
 	vector<Unit> centre;
 	tBuildLocation buildlocation;
 public:
+	Unit rcentre();
 	void start(){ buildlocation.start(); }
 	void push(Unit);
 	void pop(Unit);
