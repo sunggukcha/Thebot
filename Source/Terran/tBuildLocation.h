@@ -1,11 +1,12 @@
 #pragma once
 #include <BWAPI.h>
+#include <BWTA.h>
 #include <iostream>
 #include <queue>
 
 using namespace BWAPI;
 using namespace std;
-
+using namespace BWTA;
 
 class tBuildLocation{
 private:

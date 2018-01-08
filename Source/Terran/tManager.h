@@ -3,6 +3,7 @@
 #include <iostream>
 #include "tPlayManager.h"
 #include "tBuilding.h"
+#include "tCenter.h"
 #include "tWorker.h"
 #include "tBus.h"
 
@@ -15,11 +16,12 @@ private:
 	unsigned gas;
 private:
 	tPlaymanager playmanager;
+	Centre centre;
 	tWorker worker;
 	tBuilding building;
 public:
 	tManager(){ mineral = gas = 0; }
-	void start(){}
+	void start(){ centre.start(); }
 	void refresh();
 	void push(Unit);
 	void pop(Unit);

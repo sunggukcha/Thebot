@@ -27,11 +27,11 @@ bool tBuildLocation::ok(TilePosition T, UnitType UT = UnitTypes::Zerg_Defiler_Mo
 		if (P1.x - UT.tileWidth() + unitX <= T.x && T.x <= P2.x - unitX &&
 			P1.y - UT.tileHeight() + unitY <= T.y && T.y <= P2.y - unitY) return false;
 	}
-	queue<tuple<TilePosition, Unit> > tTP = tilepositions;
+	queue<tuple<Unit, TilePosition> > tTP = buildlocations;
 	while (!tTP.empty()){
-		tuple<TilePosition, Unit> tt = tTP.front();
+		tuple<Unit, TilePosition> tt = tTP.front();
 		tTP.pop();
-		TilePosition ttt = get<0>(tt);
+		TilePosition ttt = get<1>(tt);
 		if (ttt == T) return false;
 	}
 	return true;
@@ -46,16 +46,16 @@ bool tBuildLocation::isML(TilePosition T){
 
 /*functions for tBuildLocation*/
 void tBuildLocation::Update(Unit center){ // Updating Bulidable Locations with BFS
-	int N = tilepositions.size();
+	int N = buildlocations.size();
 	for (int i = 0; i < N; i++){ // filter inappropriate locations
-		tuple<TilePosition, Unit> tupe = tilepositions.front();
+		tuple<Unit, TilePosition> tupe = buildlocations.front();
 		TilePosition tile;
 		Unit c;
-		tie(tile, c) = tupe;
-		tilepositions.pop();
+		tie(c, tile) = tupe;
+		buildlocations.pop();
 		if (!Broodwar->canBuildHere(tile, UnitTypes::Zerg_Defiler_Mound) || !ok(tile) || !c) continue;
 		if (!c->exists()) continue;
-		tilepositions.push(tupe);
+		buildlocations.push(tupe);
 		Position a, b;
 		a = (Position)tile;
 		b = (Position)(tile + UnitTypes::Zerg_Defiler_Mound.tileSize());
@@ -64,51 +64,51 @@ void tBuildLocation::Update(Unit center){ // Updating Bulidable Locations with B
 			Broodwar->drawBoxMap(a, b, Colors::Blue);
 		}, nullptr, Broodwar->getLatencyFrames() + 1);
 	}
-	if (tilepositions.size() == 0){
+	if (buildlocations.size() == 0){
 		TilePosition tile;
 		if (center) tile = Broodwar->getBuildLocation(UnitTypes::Zerg_Spawning_Pool, center->getTilePosition(), 10);
 		if (tile){
-			tuple<TilePosition, Unit> tupe = make_tuple(tile, center) ;
-			tilepositions.push(tupe);
+			tuple<Unit, TilePosition> tupe = make_tuple(center, tile);
+			buildlocations.push(tupe);
 		}
 	}
-	else if(tilepositions.size() < 5){
-		N = tilepositions.size();
+	else if(buildlocations.size() < 5){
+		N = buildlocations.size();
 		for (int i = 0; i < N; i++){
-			tuple<TilePosition, Unit> tupe = tilepositions.front();
+			tuple<Unit, TilePosition> tupe = buildlocations.front();
 			TilePosition tile;
 			Unit c;
-			tie(tile, c) = tupe;
-			tilepositions.pop();
-			tilepositions.push(tupe);
+			tie(c, tile) = tupe;
+			buildlocations.pop();
+			buildlocations.push(tupe);
 			for (int j = 0; j < 4; j++){
 				TilePosition A;
 				A.x = tile.x + units[j][0] * 4 * unitX;
 				A.y = tile.y + units[j][1] * 3 * unitY;
-				if (Broodwar->canBuildHere(A, UnitTypes::Zerg_Defiler_Mound) && ok(A)) tilepositions.push(make_tuple(A, c));
+				if (Broodwar->canBuildHere(A, UnitTypes::Zerg_Defiler_Mound) && ok(A)) buildlocations.push(make_tuple(c, A));
 			}
 		}
-		if (N == tilepositions.size()){
-			tuple<TilePosition, Unit> tupe;
+		if (N == buildlocations.size()){
+			tuple<Unit, TilePosition> tupe;
 			TilePosition tile;
 			if (center) tile = Broodwar->getBuildLocation(UnitTypes::Zerg_Defiler_Mound, center->getTilePosition(), 10);
-			tupe = make_tuple(tile, center);
-			if (tile) tilepositions.push(tupe);
+			tupe = make_tuple(center, tile);
+			if (tile) buildlocations.push(tupe);
 		}
 	}
 }
 /*
 bool tBuildLocation::Coercion_Update(Unit center){
-	int N = tilepositions.size();
+	int N = buildlocations.size();
 	for (int i = 0; i < N; i++){ // filter inappropriate locations
-		tuple<TilePosition, Unit> tupe = tilepositions.front();
+		tuple<Unit, TilePosition> tupe = buildlocations.front();
 		TilePosition tile;
 		Unit c;
 		tie(tile, c) = tupe;
-		tilepositions.pop();
+		buildlocations.pop();
 		if (!Broodwar->canBuildHere(tile, UnitTypes::Zerg_Defiler_Mound) || !ok(tile) || !c) continue;
 		if (!c->exists()) continue;
-		tilepositions.push(tupe);
+		buildlocations.push(tupe);
 		Position a, b;
 		a = (Position)tile;
 		b = (Position)(tile + UnitTypes::Zerg_Defiler_Mound.tileSize());
@@ -117,18 +117,18 @@ bool tBuildLocation::Coercion_Update(Unit center){
 			Broodwar->drawBoxMap(a, b, Colors::Blue);
 		}, nullptr, Broodwar->getLatencyFrames() + 1);
 	}
-	if (tilepositions.size() == 0){
+	if (buildlocations.size() == 0){
 		TilePosition tile;
 		if (center) tile = Broodwar->getBuildLocation(UnitTypes::Zerg_Defiler_Mound, center->getTilePosition(), 10);
 		if (tile){
-			tuple<TilePosition, Unit> tupe = make_tuple(tile, center);
-			tilepositions.push(tupe);
+			tuple<Unit, TilePosition> tupe = make_tuple(tile, center);
+			buildlocations.push(tupe);
 			return true;
 		}
 	}
-	queue<tuple<TilePosition, Unit> > tt;
+	queue<tuple<Unit, TilePosition> > tt;
 	for (int i = 0; i < N; i++){
-		tuple<TilePosition, Unit> tupe = tt.front();
+		tuple<Unit, TilePosition> tupe = tt.front();
 		tt.pop();
 		TilePosition t = get<0>(tupe);
 		Unit u = get<1>(tupe); 
@@ -136,37 +136,37 @@ bool tBuildLocation::Coercion_Update(Unit center){
 
 	bool flag = false;
 
-	if (tilepositions.size() < 5){
-		N = tilepositions.size();
+	if (buildlocations.size() < 5){
+		N = buildlocations.size();
 		for (int i = 0; i < N; i++){
-			tuple<TilePosition, Unit> tupe = tilepositions.front();
+			tuple<Unit, TilePosition> tupe = buildlocations.front();
 			TilePosition tile;
 			Unit c;
 			tie(tile, c) = tupe;
-			tilepositions.pop();
-			tilepositions.push(tupe);
+			buildlocations.pop();
+			buildlocations.push(tupe);
 			for (int j = 0; j < 4; j++){
 				TilePosition A;
 				A.x = tile.x + units[j][0] * 4 * unitX;
 				A.y = tile.y + units[j][1] * 3 * unitY;
-				if (Broodwar->canBuildHere(A, UnitTypes::Zerg_Defiler_Mound) && ok(A)) tilepositions.push(make_tuple(A, c));
+				if (Broodwar->canBuildHere(A, UnitTypes::Zerg_Defiler_Mound) && ok(A)) buildlocations.push(make_tuple(A, c));
 			}
 		}
-		if (N == tilepositions.size()){
-			tuple<TilePosition, Unit> tupe;
+		if (N == buildlocations.size()){
+			tuple<Unit, TilePosition> tupe;
 			TilePosition tile;
 			if (center) tile = Broodwar->getBuildLocation(UnitTypes::Zerg_Defiler_Mound, center->getTilePosition(), 10);
 			tupe = make_tuple(tile, center);
-			if (tile) tilepositions.push(tupe);
+			if (tile) buildlocations.push(tupe);
 		}
 	}
 	return false;
 }
 */
 
-tuple<TilePosition, Unit> tBuildLocation::getBL(){
-	if (tilepositions.size() == 0) return make_tuple(Broodwar->self()->getStartLocation(), nullptr);
-	tuple<TilePosition, Unit> tupe = tilepositions.front();
-	tilepositions.pop();
+tuple<Unit, TilePosition> tBuildLocation::getBL(){
+	if (buildlocations.size() == 0) return make_tuple(nullptr, Broodwar->self()->getStartLocation());
+	tuple<Unit, TilePosition> tupe = buildlocations.front();
+	buildlocations.pop();
 	return tupe;
 }
