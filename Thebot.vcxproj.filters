@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Source\Dll.cpp" />
+    <ClCompile Include="Source\ThebotModule.cpp" />
+    <ClCompile Include="Source\Terran\tBuilding.cpp">
+      <Filter>Terran</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Terran\tManager.cpp">
+      <Filter>Terran</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Terran\tPlayManager.cpp">
+      <Filter>Terran</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Terran\tWorker.cpp">
+      <Filter>Terran</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Terran\tBuildLocation.cpp">
+      <Filter>Terran</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Terran\tCenter.cpp">
+      <Filter>Terran</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\ThebotModule.h" />
+    <ClInclude Include="Source\Terran\tBuilding.h">
+      <Filter>Terran</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Terran\tBus.h">
+      <Filter>Terran</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Terran\tManager.h">
+      <Filter>Terran</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Terran\tPlayManager.h">
+      <Filter>Terran</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Terran\tWorker.h">
+      <Filter>Terran</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Terran\tBuildLocation.h">
+      <Filter>Terran</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Terran\tCenter.h">
+      <Filter>Terran</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Terran">
+      <UniqueIdentifier>{bee837dd-c248-4e59-bbbd-ab5933033a69}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
