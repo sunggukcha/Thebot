@@ -6,11 +6,23 @@
 using namespace BWAPI;
 using namespace std;
 
+struct Info{
+	Unit SCV;
+	UnitType UT;
+	TilePosition tile;
+	int frame;
+	int POP;
+	Info(){ POP = 0; }
+	Info(Unit u, UnitType ut, TilePosition tp) : SCV(u), UT(ut), tile(tp){ POP = 0; }
+	Info(Unit u, UnitType ut, TilePosition tp, int N) : SCV(u), UT(ut), tile(tp), frame(N){ POP = 0; }
+};
+
 class tWorker{
 private:
 	unsigned busno;
 	vector<Unit> SCV; // MINING SCV
-	vector<Unit> SCB; // BUILDING SCV; INCLUDES SCV ABOUT TO BUILD
+	vector<Info> info;
+	map<UnitType, int> list; // BUILD LIST, pop when the build is compensated
 public: // Unit bus
 	void push(Unit);
 	void pop(Unit);
