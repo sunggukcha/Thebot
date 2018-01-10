@@ -7,7 +7,6 @@ using namespace Filter;
 using namespace std;
 
 Resource tWorker::refresh(WorkerBus wb){
-	Broodwar->drawTextScreen(0, 60, "Busno received/had: %d/%d", wb.busno, busno);
 	mine();
 	return build(wb);
 }

@@ -16,10 +16,12 @@ struct BuildBus{
 };
 
 struct CentreBus{
+	bool gas;	// refinery building
+	bool gas2;	// gas mining
 	unsigned busno;
 	UnitType UT;
-	CentreBus(){ busno = 0; }
-	CentreBus(unsigned bno, UnitType ut) : busno(bno), UT(ut) {}
+	CentreBus(){ busno = 0; gas = false; gas2 = false; }
+	CentreBus(unsigned bno, UnitType ut) : busno(bno), UT(ut) { gas = false; gas2 = false; }
 };
 
 struct WorkerBus : CentreBus{

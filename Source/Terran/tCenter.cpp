@@ -8,7 +8,15 @@ using namespace Filter;
 
 WorkerBus Centre::refresh(CentreBus cb){
 	WorkerBus* wb = new WorkerBus(cb);
+	vector<Unit> geyser;
 	if (centre.size() == 0) return *wb;
+	for (auto& u : centre){
+		bool defense = false;	// NOT IMPLEMENTED
+		short M = 0;			// MINERAL#
+		short S = 0;			// SCV@MINERAL
+		short G = 0;			// SCV@GAS
+
+	}
 	buildlocation.Update(rcentre());
 	wb->BL = buildlocation;
 	return *wb;

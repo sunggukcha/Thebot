@@ -7,9 +7,10 @@ using namespace Filter;
 using namespace std;
 
 void tManager::refresh(){
+	Broodwar->drawTextScreen(0, 0, "Frame: %d", Broodwar->getFrameCount());
+	Broodwar->drawTextScreen(0, 15, "APM: %d", Broodwar->getAPM());
 	// PM -> BUILD -> CENTRE -> WORKER -> SQUAD
 	Bus bus = playmanager.refresh(res()); // PM
-	Broodwar->drawTextScreen(200, 0, "PMbusno: %d", bus.busno);
 	add(building.refresh(bus.bb)); // BUILD
 	add(worker.refresh(centre.refresh(bus.cb))); // CENTRE -> WORKER
 }
