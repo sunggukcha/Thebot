@@ -7,7 +7,7 @@ using namespace Filter;
 using namespace std;
 
 Resource tWorker::refresh(WorkerBus wb){
-	Broodwar->drawTextScreen(0, 30, "Order/List: %d/%d", info.size(), list.size());
+	Broodwar->drawTextScreen(0, 60, "Busno received/had: %d/%d", wb.busno, busno);
 	mine();
 	return build(wb);
 }
@@ -94,7 +94,10 @@ Resource tWorker::build(WorkerBus wb){
 	// CENTRE // NOT DONE YET
 
 	// LIST -> BUILD LIST
+	Resource r;
 	for (auto& L : list){
+		r.mineral += L.first.mineralPrice() * L.second;
+		r.gas += L.first.gasPrice() * L.second;
 		if (L.second > howMany(L.first)){
 			TilePosition tile;
 			Unit SCV;
@@ -110,7 +113,6 @@ Resource tWorker::build(WorkerBus wb){
 	}
 
 
-	Resource r;
 	return r;
 }
 

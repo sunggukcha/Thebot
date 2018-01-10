@@ -12,13 +12,13 @@ struct BuildBus{
 	UpgradeType UpT;
 	TechType TT;
 	map<UnitType, vector<Unit>> table;
-	BuildBus(){ UT = UnitTypes::None; UpT = UpgradeTypes::None; TT = TechTypes::None; }
+	BuildBus(){ busno = 0; UT = UnitTypes::None; UpT = UpgradeTypes::None; TT = TechTypes::None; }
 };
 
 struct CentreBus{
 	unsigned busno;
 	UnitType UT;
-	CentreBus(){}
+	CentreBus(){ busno = 0; }
 	CentreBus(unsigned bno, UnitType ut) : busno(bno), UT(ut) {}
 };
 

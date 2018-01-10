@@ -11,7 +11,7 @@ private:
 	map<UnitType, int> all;
 	unsigned busno;
 private: // MAGICS //
-	Bus test(Resource);
+	Bus test(Bus, Resource);
 public:
 	tPlaymanager(){ busno = 0; }
 	Bus refresh(Resource);

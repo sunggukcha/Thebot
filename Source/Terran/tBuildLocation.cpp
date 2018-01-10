@@ -47,7 +47,6 @@ bool tBuildLocation::isML(TilePosition T){
 /*functions for tBuildLocation*/
 void tBuildLocation::Update(Unit center){ // Updating Bulidable Locations with BFS
 	int N = buildlocations.size();
-	Broodwar->drawTextScreen(0, 15, "BL SIZE: %d", N);
 	for (int i = 0; i < N; i++){ // filter inappropriate locations
 		tuple<Unit, TilePosition> tupe = buildlocations.front();
 		TilePosition tile;

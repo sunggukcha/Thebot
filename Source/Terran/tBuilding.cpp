@@ -9,6 +9,7 @@ using namespace BWAPI;
 using namespace Filter;
 
 Resource tBuilding::refresh(BuildBus bb){
+	Broodwar->drawTextScreen(0, 45, "Busno/uorder: %d/%d", busno, uorder.size());
 	if (bb.busno > busno){
 		if (bb.UpT != UpgradeTypes::None)
 			uporder.push_back(bb.UpT);

@@ -7,7 +7,6 @@ using namespace BWAPI;
 using namespace Filter;
 
 WorkerBus Centre::refresh(CentreBus cb){
-	Broodwar->drawTextScreen(0, 0, "CENTRE SIZE: %d", centre.size());
 	WorkerBus* wb = new WorkerBus(cb);
 	if (centre.size() == 0) return *wb;
 	buildlocation.Update(rcentre());

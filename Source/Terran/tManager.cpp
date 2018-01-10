@@ -9,6 +9,7 @@ using namespace std;
 void tManager::refresh(){
 	// PM -> BUILD -> CENTRE -> WORKER -> SQUAD
 	Bus bus = playmanager.refresh(res()); // PM
+	Broodwar->drawTextScreen(200, 0, "PMbusno: %d", bus.busno);
 	add(building.refresh(bus.bb)); // BUILD
 	add(worker.refresh(centre.refresh(bus.cb))); // CENTRE -> WORKER
 }

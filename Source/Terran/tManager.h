@@ -26,5 +26,5 @@ public:
 	void push(Unit);
 	void pop(Unit);
 	void add(Resource r){ mineral += r.mineral; gas += r.gas; }
-	Resource res(){ Resource r(mineral, gas); return r; }
+	Resource res(){ Resource r(mineral, gas); mineral = gas = 0; return r; }
 };
