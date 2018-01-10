@@ -26,6 +26,7 @@ struct WorkerBus : CentreBus{
 	WorkerBus(){}
 	WorkerBus(CentreBus cb) : CentreBus(cb.busno, cb.UT) {}
 	tBuildLocation BL;
+	vector<Unit> geyser;
 };
 
 struct SquadBus{

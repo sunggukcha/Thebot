@@ -32,6 +32,8 @@ public: // Manager functions
 private:
 	void mine();
 	Resource build(WorkerBus);
+	bool isWorking(Unit);
+	int howMany(UnitType);
 
 	/*
 public:
