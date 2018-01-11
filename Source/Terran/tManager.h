@@ -5,6 +5,7 @@
 #include "tBuilding.h"
 #include "tCenter.h"
 #include "tWorker.h"
+#include "tSquad.h"
 #include "tBus.h"
 
 using namespace BWAPI;
@@ -20,6 +21,7 @@ private:
 	Centre centre;
 	tWorker worker;
 	tBuilding building;
+	tSquad squad;
 public:
 	tManager(){ mineral = gas = 0; }
 	void start(){ centre.start(); }
