@@ -6,7 +6,7 @@ using namespace BWAPI;
 using namespace Filter;
 using namespace std;
 
-Resource tWorker::refresh(WorkerBus wb){
+PMBus tWorker::refresh(WorkerBus wb){
 	mine();
 	return build(wb);
 }
@@ -26,9 +26,11 @@ void tWorker::mine(){
 // PLAY MANAGER CANNOT ORDER WHAT IMPOSSIBLE TO BUILD
 // REFRESH(CHECK IF COMPLETED) -> ADD BUS ITEM -> GEYSERS -> CENTRE -> ACTUAL BUILD
 
-Resource tWorker::build(WorkerBus wb){
+PMBus tWorker::build(WorkerBus wb){
+	PMBus r;
 	vector<Info> tinfo;
-
+	int _i = 0;
+	int __i = 0;
 	// REFRESH & ORDER TO BUILD
 	for (auto& I : info){
 		// 2016 SUNGGUKCHA VERSION
@@ -45,6 +47,8 @@ Resource tWorker::build(WorkerBus wb){
 			Broodwar->drawBoxMap((Position)tp1, (Position)tp2, Colors::Orange);
 			Broodwar->drawTextMap(u->getPosition(), "%s", ut.c_str());
 		}, nullptr, Broodwar->getLatencyFrames());
+		Broodwar->drawTextScreen(100, _i, "%s", ut.c_str());
+		_i += 15;
 
 		if (I.POP >= 50){
 			if (I.UT != UnitTypes::Terran_Refinery) list[I.UT]--;
@@ -55,7 +59,7 @@ Resource tWorker::build(WorkerBus wb){
 		else if (Broodwar->self()->minerals() >= 0.8 * I.UT.mineralPrice() && Broodwar->self()->gas() >= 0.8 * I.UT.gasPrice()){ // ADD ECONOMY RELEVANT CONDITIONS
 			I.POP = 0;
 			Position p = (Position)(I.tile + I.UT.tileSize() / 2);
-			if (I.SCV->getDistance(p) > 10) I.SCV->move(p);
+			if (I.SCV->getDistance(p) > 10 && I.UT != UnitTypes::Terran_Refinery) I.SCV->move(p);
 			else I.SCV->build(I.UT, I.tile);
 		}
 		tinfo.push_back(I);
@@ -82,6 +86,7 @@ Resource tWorker::build(WorkerBus wb){
 			}
 		}
 		if (flag) continue;
+		r.resource.mineral += 100;
 		UnitType UT = UnitTypes::Terran_Refinery;
 		TilePosition tile = G->getTilePosition();
 		Unit SCV = G->getClosestUnit(IsOwned && IsGatheringMinerals && !IsCarryingSomething, 600);
@@ -95,11 +100,12 @@ Resource tWorker::build(WorkerBus wb){
 	// CENTRE // NOT DONE YET
 
 	// LIST -> BUILD LIST
-	Resource r;
 	for (auto& L : list){
-		r.mineral += L.first.mineralPrice() * L.second;
-		r.gas += L.first.gasPrice() * L.second;
-		if (L.second > howMany(L.first)){
+		Broodwar->drawTextScreen(200, __i, "%s %d", L.first.c_str(), L.second);
+		__i += 15;
+		r.resource.mineral += L.first.mineralPrice() * L.second;
+		r.resource.gas += L.first.gasPrice() * L.second;
+		if (L.second > howMany(L.first) || L.first == UnitTypes::Terran_Refinery){
 			TilePosition tile;
 			Unit SCV;
 			tie(SCV, tile) = wb.BL.getBL();
@@ -113,7 +119,7 @@ Resource tWorker::build(WorkerBus wb){
 		}
 	}
 
-
+	r.list = list;
 	return r;
 }
 

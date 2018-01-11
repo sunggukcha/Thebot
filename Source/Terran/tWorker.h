@@ -6,17 +6,6 @@
 using namespace BWAPI;
 using namespace std;
 
-struct Info{
-	Unit SCV;
-	UnitType UT;
-	TilePosition tile;
-	int frame;
-	int POP;
-	Info(){ POP = 0; }
-	Info(Unit u, UnitType ut, TilePosition tp) : SCV(u), UT(ut), tile(tp){ POP = 0; }
-	Info(Unit u, UnitType ut, TilePosition tp, int N) : SCV(u), UT(ut), tile(tp), frame(N){ POP = 0; }
-};
-
 class tWorker{
 private:
 	unsigned busno;
@@ -28,10 +17,10 @@ public: // Unit bus
 	void pop(Unit);
 public: // Manager functions
 	tWorker(){ busno = 0; }
-	Resource refresh(WorkerBus);
+	PMBus refresh(WorkerBus);
 private:
 	void mine();
-	Resource build(WorkerBus);
+	PMBus build(WorkerBus);
 	bool isWorking(Unit);
 	int howMany(UnitType);
 

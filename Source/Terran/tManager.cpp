@@ -10,7 +10,8 @@ void tManager::refresh(){
 	Broodwar->drawTextScreen(0, 0, "Frame: %d", Broodwar->getFrameCount());
 	Broodwar->drawTextScreen(0, 15, "APM: %d", Broodwar->getAPM());
 	// PM -> BUILD -> CENTRE -> WORKER -> SQUAD
-	Bus bus = playmanager.refresh(res()); // PM
+	pmbus.resource = res();
+	Bus bus = playmanager.refresh(pmbus); // PM
 	add(building.refresh(bus.bb)); // BUILD
 	add(worker.refresh(centre.refresh(bus.cb))); // CENTRE -> WORKER
 }

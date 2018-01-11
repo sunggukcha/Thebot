@@ -21,12 +21,12 @@ struct CentreBus{
 	unsigned busno;
 	UnitType UT;
 	CentreBus(){ busno = 0; gas = false; gas2 = false; }
-	CentreBus(unsigned bno, UnitType ut) : busno(bno), UT(ut) { gas = false; gas2 = false; }
+	CentreBus(unsigned bno, UnitType ut, bool g1, bool g2) : busno(bno), UT(ut), gas(g1), gas2(g2) {}
 };
 
 struct WorkerBus : CentreBus{
 	WorkerBus(){}
-	WorkerBus(CentreBus cb) : CentreBus(cb.busno, cb.UT) {}
+	WorkerBus(CentreBus cb) : CentreBus(cb.busno, cb.UT, cb.gas, cb.gas2) {}
 	tBuildLocation BL;
 	vector<Unit> geyser;
 };
@@ -46,6 +46,24 @@ struct Bus{
 struct Resource{
 	unsigned mineral;
 	unsigned gas;
-	Resource(){}
+	Resource(){ mineral = gas = 0; }
 	Resource(int m, int g) :mineral(m), gas(g){}
+};
+
+struct Info{
+	Unit SCV;
+	UnitType UT;
+	TilePosition tile;
+	int frame;
+	int POP;
+	Info(){ POP = 0; }
+	Info(Unit u, UnitType ut, TilePosition tp) : SCV(u), UT(ut), tile(tp){ POP = 0; }
+	Info(Unit u, UnitType ut, TilePosition tp, int N) : SCV(u), UT(ut), tile(tp), frame(N){ POP = 0; }
+};
+
+struct PMBus{
+	Resource resource;
+	map<UnitType, int> list;
+	PMBus(){}
+	PMBus(Resource res, map<UnitType, int> _info) :resource(res), list(_info){}
 };

@@ -30,12 +30,14 @@ Resource tBuilding::refresh(BuildBus bb){
 
 void tBuilding::train(){
 	vector<UnitType> torder;
+	int _i = 45;
 	for (auto& ut : uorder){
 		UnitType UT = ut.whatBuilds().first; // <UnitType, int>:: 0:cannot, 2:Archons, 1: others
+		Broodwar->drawTextScreen(0, _i, "%s", ut.c_str()); _i += 15;
 		if (table.find(UT) != table.end()){ // if there are buildings that can produce
 			bool made = false;
 			for (auto& u : table[UT]){
-				if (u->canTrain(ut)){
+				if (u->canTrain(ut) && u->isIdle()){
 					u->train(ut);
 					made = true;
 					break;
