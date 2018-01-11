@@ -26,6 +26,8 @@ Bus tPlaymanager::refresh(Resource r){
 }
 
 Bus tPlaymanager::test(Bus res, Resource r){
+	res.cb.gas = true;
+	res.cb.gas2 = true;
 	if (Broodwar->self()->minerals() - r.mineral > 0 && r.mineral <= 500){
 		res.bb.busno = ++busno;
 		res.bb.UT = UnitTypes::Terran_SCV;

@@ -33,8 +33,21 @@ Resource tWorker::build(WorkerBus wb){
 	for (auto& I : info){
 		// 2016 SUNGGUKCHA VERSION
 		if (!I.SCV->exists()) continue; // SCV DEAD
+
+		Unit u = I.SCV;
+		UnitType ut = I.UT;
+		TilePosition tp1 = I.tile;
+		TilePosition tp2 = I.tile + I.UT.tileSize();
+
+		Broodwar->registerEvent([u, ut, tp1, tp2](Game*)
+		{
+			Broodwar->drawCircleMap(u->getPosition(), 4, Colors::Blue, true);
+			Broodwar->drawBoxMap((Position)tp1, (Position)tp2, Colors::Orange);
+			Broodwar->drawTextMap(u->getPosition(), "%s", ut.c_str());
+		}, nullptr, Broodwar->getLatencyFrames());
+
 		if (I.POP >= 50){
-			list[I.UT]--;
+			if (I.UT != UnitTypes::Terran_Refinery) list[I.UT]--;
 			continue;
 		}
 		else if (I.SCV->isConstructing()) I.POP++;
@@ -44,18 +57,6 @@ Resource tWorker::build(WorkerBus wb){
 			Position p = (Position)(I.tile + I.UT.tileSize() / 2);
 			if (I.SCV->getDistance(p) > 10) I.SCV->move(p);
 			else I.SCV->build(I.UT, I.tile);
-
-			Unit u = I.SCV;
-			UnitType ut = I.UT;
-			TilePosition tp1 = I.tile;
-			TilePosition tp2 = I.tile + I.UT.tileSize();
-
-			Broodwar->registerEvent([u, ut, tp1, tp2](Game*)
-			{
-				Broodwar->drawCircleMap(u->getPosition(), 4, Colors::Blue, true);
-				Broodwar->drawBoxMap((Position)tp1, (Position)tp2, Colors::Orange);
-				Broodwar->drawTextMap(u->getPosition(), "%s", ut.c_str());
-			}, nullptr, Broodwar->getLatencyFrames());
 		}
 		tinfo.push_back(I);
 	}
@@ -72,6 +73,7 @@ Resource tWorker::build(WorkerBus wb){
 
 	// GEYSERS
 	for (const auto& G : wb.geyser){
+		if (!IsNeutral(G)) continue;
 		bool flag = false;
 		for (const auto& I : info){
 			if (I.tile == G->getTilePosition()){
