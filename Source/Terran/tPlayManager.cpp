@@ -44,7 +44,6 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 	}
 	if (Broodwar->self()->supplyTotal() + building_depot * 16 - Broodwar->self()->supplyUsed() <= C && Broodwar->self()->supplyTotal() + building_depot < 400 &&
 		!(test_fr + 10 > Broodwar->getFrameCount() && test_UT == UnitTypes::Terran_Supply_Depot)){ // C = PRODUCING BUILDINGS * 2
-		Broodwar << "ORDER SET " << building_depot << endl;
 		res.cb.busno = ++busno;
 		res.cb.UT = UnitTypes::Terran_Supply_Depot;
 	}

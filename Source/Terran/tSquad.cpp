@@ -49,16 +49,22 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy){
 	for (auto& u : earmy)
 		hp[u] = u->getHitPoints() + u->getShields();
 	for (auto& u : myarmy){
+		if (u->getGroundWeaponCooldown() + u->getAirWeaponCooldown() > 0){
+			// move forward or backward
+			continue;
+		}
 		bool attack = false;
 		Unit target;
 		int min = 0;
 		bool kill = false;
 		double value = 0.0;
 		for (auto& e : u->getUnitsInWeaponRange(u->getType().airWeapon())){
+			if (!IsEnemy(e)) continue;
+			if (hp[e] <= 0) continue;
 			UnitType mt, et;
 			mt = u->getType();
 			et = e->getType();
-			int HP = hp[u] - (mt.airWeapon().damageAmount() + mt.airWeapon().damageBonus()
+			int HP = hp[e] - (mt.airWeapon().damageAmount() + mt.airWeapon().damageBonus()
 				* Broodwar->self()->getUpgradeLevel(mt.airWeapon().upgradeType()) - (et.armor() + Broodwar->enemy()->getUpgradeLevel(et.armorUpgrade()))
 				* mt.airWeapon().damageFactor() * damage_ratio(u, e));
 			// KILL
@@ -76,6 +82,42 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy){
 				min = HP;
 				target = e;
 			}
+		}
+		for (auto& e : u->getUnitsInWeaponRange(u->getType().groundWeapon())){
+			if (!IsEnemy(e)) continue;
+			if (hp[e] <= 0) continue;
+			UnitType mt, et;
+			mt = u->getType();
+			et = e->getType();
+			int HP = hp[e] - (mt.groundWeapon().damageAmount() + mt.groundWeapon().damageBonus()
+				* Broodwar->self()->getUpgradeLevel(mt.groundWeapon().upgradeType()) - (et.armor() + Broodwar->enemy()->getUpgradeLevel(et.armorUpgrade()))
+				* mt.groundWeapon().damageFactor() * damage_ratio(u, e));
+			// KILL
+			if (HP < 0){
+				double _value = e->getType().mineralPrice() + e->getType().gasPrice() * 1.5;
+				if (!kill || value < _value){
+					kill = true;
+					value = _value;
+					target = e;
+				}
+			}
+			// Min target
+			else if (!attack || min > HP){
+				attack = true;
+				min = HP;
+				target = e;
+			}
+		}
+		if (target){
+			u->attack(target);
+			kill ? hp[target] = 0 : hp[target] = min;
+			Broodwar->registerEvent([u, target](Game*)
+			{
+				Broodwar->drawLineMap(u->getPosition(), target->getPosition(), Colors::Red);
+			}, nullptr, Broodwar->getLatencyFrames() + 1);
+		}
+		else{ // No target in range
+			//Move forward or backward
 		}
 	}
 }
