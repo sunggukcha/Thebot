@@ -14,10 +14,22 @@ PMBus tWorker::refresh(WorkerBus wb){
 void tWorker::mine(){
 	for (auto& u : SCV){
 		if (u->isIdle() && !isWorking(u)){ // IDLE -> GATHER CLOSEST MINERAL
-			Unit M = u->getClosestUnit(IsMineralField);
-			if (M){
-				u->gather(M);
+			Unit centre = u->getClosestUnit(IsOwned && GetType == UnitTypes::Terran_Command_Center);
+			Unit M;
+			if (centre){
+				int min = 0;
+				for (auto& m : u->getUnitsInRadius(400)){
+					if (!IsMineralField(m)) continue;
+					if (min == 0 || min < m->getResources()){
+						min = m->getResources();
+						M = m;
+					}
+				}
 			}
+			else M = u->getClosestUnit(IsMineralField);
+
+			if (M)
+				u->gather(M);
 		}
 	}
 }

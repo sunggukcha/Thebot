@@ -91,7 +91,7 @@ void tBuildLocation::Update(Unit center){ // Updating Bulidable Locations with B
 			buildlocations.push(tupe);
 			for (int j = 0; j < 4; j++){
 				TilePosition A;
-				A.x = tile.x + units[j][0] * 5 * unitX;
+				A.x = tile.x + units[j][0] * 6 * unitX;
 				A.y = tile.y + units[j][1] * 4 * unitY;
 				if (Broodwar->canBuildHere(A, UnitTypes::Terran_Barracks) && ok(A)){
 					buildlocations.push(make_tuple(c, A));

@@ -7,7 +7,7 @@ using namespace BWAPI;
 using namespace Filter;
 using namespace std;
 
-float damage_ratio(Unit u, Unit target){
+float Emperor_Junyoung::damage_ratio(Unit u, Unit target){
 	static map<UnitType, int> armor;
 	static bool once = true;
 	if (once){
@@ -21,7 +21,7 @@ float damage_ratio(Unit u, Unit target){
 		 a = u->getType().airWeapon().damageType();
 	else
 		a = u->getType().groundWeapon().damageType();
-	if (a == DamageTypes::Normal || armor.find(target->getType) == armor.end()) return 1.0;
+	if (a == DamageTypes::Normal || armor.find(target->getType()) == armor.end()) return 1.0;
 	else if (a == DamageTypes::Concussive){
 		switch (armor[target->getType()]){
 		case 0:
@@ -45,5 +45,37 @@ float damage_ratio(Unit u, Unit target){
 }
 
 void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy){
-	Unit u;
+	map<Unit, int> hp;
+	for (auto& u : earmy)
+		hp[u] = u->getHitPoints() + u->getShields();
+	for (auto& u : myarmy){
+		bool attack = false;
+		Unit target;
+		int min = 0;
+		bool kill = false;
+		double value = 0.0;
+		for (auto& e : u->getUnitsInWeaponRange(u->getType().airWeapon())){
+			UnitType mt, et;
+			mt = u->getType();
+			et = e->getType();
+			int HP = hp[u] - (mt.airWeapon().damageAmount() + mt.airWeapon().damageBonus()
+				* Broodwar->self()->getUpgradeLevel(mt.airWeapon().upgradeType()) - (et.armor() + Broodwar->enemy()->getUpgradeLevel(et.armorUpgrade()))
+				* mt.airWeapon().damageFactor() * damage_ratio(u, e));
+			// KILL
+			if (HP < 0){
+				double _value = e->getType().mineralPrice() + e->getType().gasPrice() * 1.5;
+				if (!kill || value < _value){
+					kill = true;
+					value = _value;
+					target = e;
+				}
+			}
+			// Min target
+			else if (!attack || min > HP){
+				attack = true;
+				min = HP;
+				target = e;
+			}
+		}
+	}
 }
