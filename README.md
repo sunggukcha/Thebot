@@ -1,7 +1,4 @@
 # Thebot
 
-Zerg
-
-Terran
-
-Protoss
+BWAPI	4.1.2.
+BWTA	2.2.

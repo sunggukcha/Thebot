@@ -26,6 +26,7 @@ public:
 	tManager(){ mineral = gas = 0; }
 	void start(){ centre.start(); }
 	void refresh();
+	void discover(Unit u){ if (IsBuilding(u)) squad.discover(u->getTilePosition()); else squad.discover(u); }
 	void push(Unit);
 	void pop(Unit);
 	void add(Resource r){ mineral += r.mineral; gas += r.gas; }

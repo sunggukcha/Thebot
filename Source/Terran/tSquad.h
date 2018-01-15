@@ -1,6 +1,3 @@
-// Heo Junyoung (1995~)
-// BATTLE ALGORITHM INVENTOR
-
 #pragma once
 #include <BWAPI.h>
 #include <iostream>
@@ -8,7 +5,6 @@
 using namespace BWAPI;
 using namespace std;
 using namespace Filter;
-
 
 class Emperor_Junyoung{
 private:
@@ -23,7 +19,21 @@ class tSquad{
 private:
 	Emperor_Junyoung Junyoung;
 	vector<Unit> army;
+	vector<Unit> enemy;
+	vector<TilePosition> targets;
 public:
+	void discover(Unit u){ if (find(enemy.begin(), enemy.end(), u) == enemy.end()) enemy.push_back(u); }
+	void discover(TilePosition tp){ if (find(targets.begin(), targets.end(), tp) == targets.end()) targets.push_back(tp); }
 	void push(Unit u){ army.push_back(u); }
-	void pop(Unit u){ army.erase(find(army.begin(), army.end(), u)); }
+	void pop(Unit u){
+		if (IsOwned(u)) army.erase(find(army.begin(), army.end(), u));
+		else{
+			for (auto &e : enemy){
+				if (u->getID() == e->getID()){
+					enemy.erase(find(enemy.begin(), enemy.end(), e));
+					return;
+				}
+			}
+		}
+	}
 };

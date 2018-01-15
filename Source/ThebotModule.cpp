@@ -47,11 +47,12 @@ void ThebotModule::onPlayerLeft(BWAPI::Player player)
 }
 void ThebotModule::onNukeDetect(BWAPI::Position target)
 {
-
 }
 void ThebotModule::onUnitDiscover(BWAPI::Unit unit)
 {
 	if (IsEnemy(unit)){
+		if (race == Races::Terran)
+			terran.discover(unit);
 		//if (IsBuilding(unit) && !IsRefinery(unit)) manager.push(make_tuple(unit, unit->getPosition()));
 		//manager.push(unit);
 	}

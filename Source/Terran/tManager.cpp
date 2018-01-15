@@ -32,4 +32,7 @@ void tManager::pop(Unit u){
 		centre.pop(u);
 	if (IsOwned(u) && !IsBuilding(u) && !IsWorker(u))
 		squad.pop(u);
+
+	if (IsEnemy(u))
+		squad.pop(u);
 }

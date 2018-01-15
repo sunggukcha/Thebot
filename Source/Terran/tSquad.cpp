@@ -68,12 +68,17 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy){
 				* Broodwar->self()->getUpgradeLevel(mt.airWeapon().upgradeType()) - (et.armor() + Broodwar->enemy()->getUpgradeLevel(et.armorUpgrade()))
 				* mt.airWeapon().damageFactor() * damage_ratio(u, e));
 			// KILL
-			if (HP < 0){
+			if (HP <= 0){
 				double _value = e->getType().mineralPrice() + e->getType().gasPrice() * 1.5;
 				if (!kill || value < _value){
 					kill = true;
 					value = _value;
 					target = e;
+					min = HP;
+				}
+				else if (value == _value && abs(min) > abs(HP)){
+					target = e;
+					min = HP;
 				}
 			}
 			// Min target
@@ -93,12 +98,16 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy){
 				* Broodwar->self()->getUpgradeLevel(mt.groundWeapon().upgradeType()) - (et.armor() + Broodwar->enemy()->getUpgradeLevel(et.armorUpgrade()))
 				* mt.groundWeapon().damageFactor() * damage_ratio(u, e));
 			// KILL
-			if (HP < 0){
+			if (HP <= 0){
 				double _value = e->getType().mineralPrice() + e->getType().gasPrice() * 1.5;
 				if (!kill || value < _value){
 					kill = true;
 					value = _value;
 					target = e;
+				}
+				else if (value == _value && abs(min) > abs(HP)){
+					target = e;
+					min = HP;
 				}
 			}
 			// Min target

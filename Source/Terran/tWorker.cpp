@@ -15,7 +15,7 @@ void tWorker::mine(){
 	for (auto& u : SCV){
 		if (u->isIdle() && !isWorking(u)){ // IDLE -> GATHER CLOSEST MINERAL
 			Unit centre = u->getClosestUnit(IsOwned && GetType == UnitTypes::Terran_Command_Center);
-			Unit M;
+			Unit M = NULL;
 			if (centre){
 				int min = 0;
 				for (auto& m : u->getUnitsInRadius(400)){
@@ -28,7 +28,7 @@ void tWorker::mine(){
 			}
 			else M = u->getClosestUnit(IsMineralField);
 
-			if (M)
+			if (M != NULL)
 				u->gather(M);
 		}
 	}
@@ -97,8 +97,8 @@ PMBus tWorker::build(WorkerBus wb){
 				break;
 			}
 		}
-		if (flag) continue;
 		r.resource.mineral += 100;
+		if (flag) continue;
 		UnitType UT = UnitTypes::Terran_Refinery;
 		TilePosition tile = G->getTilePosition();
 		Unit SCV = G->getClosestUnit(IsOwned && IsGatheringMinerals && !IsCarryingSomething, 600);
