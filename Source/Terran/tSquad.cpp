@@ -130,3 +130,13 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy){
 		}
 	}
 }
+
+void tSquad::refresh(){
+	vector<TilePosition> ts;
+	for (auto& base : startlocations){
+		if (Broodwar->isExplored(base)) continue;
+		ts.push_back(base);
+	}
+	startlocations = ts;
+	if ()
+}

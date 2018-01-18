@@ -24,7 +24,7 @@ private:
 	tSquad squad;
 public:
 	tManager(){ mineral = gas = 0; }
-	void start(){ centre.start(); }
+	void start(){ centre.start(); squad.start(); }
 	void refresh();
 	void discover(Unit u){ if (IsBuilding(u)) squad.discover(u->getTilePosition()); else squad.discover(u); }
 	void push(Unit);
