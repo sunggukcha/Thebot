@@ -138,5 +138,18 @@ void tSquad::refresh(){
 		ts.push_back(base);
 	}
 	startlocations = ts;
-	if ()
+	if (targets.empty()){
+		if (!startlocations.empty()){
+			target = startlocations.front();
+		}
+		else{
+			unsigned k = Broodwar->getFrameCount() % multilocations.size();
+			int i = 0;
+			for (auto& base : multilocations){
+				if (i++ != k) continue;
+				target = base;
+				break;
+			}
+		}
+	}
 }

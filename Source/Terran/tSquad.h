@@ -19,7 +19,9 @@ class tSquad{
 private:
 	// Target Positioning
 	bool search;
+	bool targ;
 	vector<TilePosition> startlocations;
+	vector<TilePosition> multilocations;
 private:
 	Emperor_Junyoung Junyoung;
 	vector<Unit> army;
@@ -29,8 +31,11 @@ private:
 public:
 	void start(){
 		search = true;
+		targ = false;
 		for (auto& base : Broodwar->getStartLocations())
 			startlocations.push_back(base);
+		for (auto &base : BWTA::getBaseLocations())
+			multilocations.push_back(base->getTilePosition());
 	}
 	void refresh();
 public:
