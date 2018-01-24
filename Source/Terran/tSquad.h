@@ -31,7 +31,6 @@ private:
 public:
 	void start(){
 		search = true;
-		targ = false;
 		for (auto& base : Broodwar->getStartLocations())
 			startlocations.push_back(base);
 		for (auto &base : BWTA::getBaseLocations())

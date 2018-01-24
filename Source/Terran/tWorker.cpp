@@ -68,11 +68,13 @@ PMBus tWorker::build(WorkerBus wb){
 		}
 		else if (I.SCV->isConstructing()) I.POP++;
 		else if (!Broodwar->canBuildHere(I.tile, I.UT, I.SCV)) continue;
-		else if (Broodwar->self()->minerals() >= 0.8 * I.UT.mineralPrice() && Broodwar->self()->gas() >= 0.8 * I.UT.gasPrice()){ // ADD ECONOMY RELEVANT CONDITIONS
+		else{
 			I.POP = 0;
-			Position p = (Position)(I.tile + I.UT.tileSize() / 2);
-			if (I.SCV->getDistance(p) > 10 && I.UT != UnitTypes::Terran_Refinery) I.SCV->move(p);
-			else I.SCV->build(I.UT, I.tile);
+			if (Broodwar->self()->minerals() >= 0.8 * I.UT.mineralPrice() && Broodwar->self()->gas() >= 0.8 * I.UT.gasPrice()){ // ADD ECONOMY RELEVANT CONDITIONS
+				Position p = (Position)(I.tile + I.UT.tileSize() / 2);
+				if (I.SCV->getDistance(p) > 10 && I.UT != UnitTypes::Terran_Refinery) I.SCV->move(p);
+				else I.SCV->build(I.UT, I.tile);
+			}
 		}
 		tinfo.push_back(I);
 	}

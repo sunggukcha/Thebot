@@ -14,6 +14,7 @@ void tManager::refresh(){
 	Bus bus = playmanager.refresh(pmbus); // PM
 	add(building.refresh(bus.bb)); // BUILD
 	add(worker.refresh(centre.refresh(bus.cb))); // CENTRE -> WORKER
+	squad.refresh();
 }
 
 void tManager::push(Unit u){

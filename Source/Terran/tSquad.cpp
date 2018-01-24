@@ -132,17 +132,21 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy){
 }
 
 void tSquad::refresh(){
+	// TARGET POSITIONING
 	vector<TilePosition> ts;
 	for (auto& base : startlocations){
 		if (Broodwar->isExplored(base)) continue;
 		ts.push_back(base);
 	}
 	startlocations = ts;
-	if (targets.empty()){
+	bool yes = targets.empty();
+	if (yes){
 		if (!startlocations.empty()){
+			targ = true;
 			target = startlocations.front();
 		}
 		else{
+			targ = false;
 			unsigned k = Broodwar->getFrameCount() % multilocations.size();
 			int i = 0;
 			for (auto& base : multilocations){
@@ -152,4 +156,18 @@ void tSquad::refresh(){
 			}
 		}
 	}
+	Position targe = (Position) target;
+	bool tarG = targ;
+	Broodwar->registerEvent([yes, tarG, targe](Game*)
+	{
+		if (yes){
+			Broodwar->drawCircleMap(targe, 5, Colors::Green, tarG);
+			Broodwar->drawCircleMap(targe, 150, Colors::Green);
+		}
+		else{
+			Broodwar->drawCircleMap(targe, 5, Colors::Red, tarG);
+			Broodwar->drawCircleMap(targe, 150, Colors::Red);
+		}
+	}, nullptr, Broodwar->getLatencyFrames());
+
 }
