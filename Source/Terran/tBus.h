@@ -24,7 +24,8 @@ struct CentreBus{
 	CentreBus(unsigned bno, UnitType ut, bool g1, bool g2) : busno(bno), UT(ut), gas(g1), gas2(g2) {}
 };
 
-struct WorkerBus : CentreBus{
+struct WorkerBus : CentreBus{ // CENTRE -> WORKER
+	unsigned short worker;
 	WorkerBus(){}
 	WorkerBus(CentreBus cb) : CentreBus(cb.busno, cb.UT, cb.gas, cb.gas2) {}
 	tBuildLocation BL;
@@ -62,8 +63,14 @@ struct Info{
 };
 
 struct PMBus{
-	Resource resource;
-	map<UnitType, int> list;
+	// BETWEEN PLAMANAGER
+	unsigned short wk;			// WORKER REQUIRED NUMBER
+	unsigned C;					// TRAINING BUILDINGS
+	map<UnitType, int> number, _number; // number for complete number, _number for incomplete number of the UT
+	map<UnitType, bool> idle;
+	//
+	Resource resource;			// FROM MANAGER
+	map<UnitType, int> list;	// CONSTRUCT PLAN LIST from WORKER
 	PMBus(){}
 	PMBus(Resource res, map<UnitType, int> _info) :resource(res), list(_info){}
 };

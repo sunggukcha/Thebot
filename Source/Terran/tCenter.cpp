@@ -9,6 +9,7 @@ using namespace Filter;
 WorkerBus Centre::refresh(CentreBus cb){
 	WorkerBus* wb = new WorkerBus(cb);
 	vector<Unit> geyser;
+	unsigned short wk = 0;
 	if (centre.size() == 0) return *wb;
 	for (auto& u : centre){
 		bool defense = false;	// NOT IMPLEMENTED
@@ -23,6 +24,7 @@ WorkerBus Centre::refresh(CentreBus cb){
 			if (uu->getType().isWorker() && IsOwned(uu) && uu->isGatheringMinerals()) S++;
 			if (uu->getType().isWorker() && IsOwned(uu) && uu->isGatheringGas()) G++;
 		}
+		wk += M * 2;
 		if (S > 6 && wb->gas){
 			Unit geyser = u->getClosestUnit(GetType == UnitTypes::Resource_Vespene_Geyser && IsNeutral, 300);
 			if (geyser){
@@ -32,6 +34,7 @@ WorkerBus Centre::refresh(CentreBus cb){
 		}
 		Unit geyser = u->getClosestUnit(IsOwned && !IsBeingConstructed && GetType == UnitTypes::Terran_Refinery, 300);
 		if (geyser){
+			wk += 3;
 			if (G > 3 || wb->gas2 == false){
 				Unit come = u->getClosestUnit(GetType == u->getType().getRace().getWorker() &&
 					IsGatheringGas && !IsCarryingSomething);
@@ -60,6 +63,7 @@ WorkerBus Centre::refresh(CentreBus cb){
 	}
 	buildlocation.Update(rcentre());
 	wb->BL = buildlocation;
+	wb->worker = wk;
 	return *wb;
 }
 

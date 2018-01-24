@@ -12,7 +12,7 @@ private:
 	float damage_ratio(Unit, Unit);
 public:
 	bool isFight();
-	void battle(vector<Unit> myarmy, vector<Unit> earmy);
+	void battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave);
 };
 
 class tSquad{

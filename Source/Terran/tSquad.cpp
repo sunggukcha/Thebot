@@ -42,15 +42,38 @@ float Emperor_Junyoung::damage_ratio(Unit u, Unit target){
 			return 1.0;
 		}
 	}
+	return 1.0;
 }
 
-void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy){
+void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave){
 	map<Unit, int> hp;
 	for (auto& u : earmy)
 		hp[u] = u->getHitPoints() + u->getShields();
 	for (auto& u : myarmy){
 		if (u->getGroundWeaponCooldown() + u->getAirWeaponCooldown() > 0){
 			// move forward or backward
+			// if weapon in cooldown / 2, position in maximum range
+			// otherwise, evade. SEE HOW MARINE, VULTURE, OR THAT KINDS WORKS
+			if (u->getGroundWeaponCooldown() >= u->getType().groundWeapon().damageCooldown() / 2){
+				Unit e = u->getClosestUnit(IsEnemy && !IsFlying);
+				if (e){
+					Position ppp;
+					ppp.x = 4 * u->getPosition().x - 3 * e->getPosition().x;
+					ppp.y = 4 * u->getPosition().y - 3 * e->getPosition().y;
+					ppp.makeValid();
+					u->move(ppp);
+				}
+			}
+			else if (u->getAirWeaponCooldown() >= u->getType().airWeapon().damageCooldown() / 2){
+				Unit e = u->getClosestUnit(IsEnemy && IsFlying);
+				if (e){
+					Position ppp;
+					ppp.x = 4 * u->getPosition().x - 3 * e->getPosition().x;
+					ppp.y = 4 * u->getPosition().y - 3 * e->getPosition().y;
+					ppp.makeValid();
+					u->move(ppp);
+				}
+			}
 			continue;
 		}
 		bool attack = false;
@@ -127,6 +150,7 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy){
 		}
 		else{ // No target in range
 			//Move forward or backward
+			u->attack(ave);
 		}
 	}
 }
@@ -170,4 +194,5 @@ void tSquad::refresh(){
 		}
 	}, nullptr, Broodwar->getLatencyFrames());
 
+	Junyoung.battle(army, enemy, (Position) target);
 }

@@ -6,7 +6,6 @@
 #pragma once
 #include <BWAPI.h>
 #include <iostream>
-#include "tBuildLocation.h"
 #include "tBus.h"
 
 using namespace BWAPI;

@@ -43,6 +43,8 @@ PMBus tWorker::build(WorkerBus wb){
 	vector<Info> tinfo;
 	int _i = 0;
 	int __i = 0;
+	// REQUIRED SCV from CENTRE TO PM
+	r.wk = wb.worker;
 	// REFRESH & ORDER TO BUILD
 	for (auto& I : info){
 		// 2016 SUNGGUKCHA VERSION
