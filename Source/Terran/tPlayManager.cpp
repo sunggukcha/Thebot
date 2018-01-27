@@ -14,6 +14,11 @@ Bus tPlaymanager::refresh(PMBus r){
 	map<UnitType, int> n, _n;
 	map<UnitType, bool> idle;
 	unsigned C = 0;
+	for (auto& u : kinds){
+		n[u] = 0;
+		_n[u] = 0;
+		idle[u] = false;
+	}
 	for (auto& u : Broodwar->self()->getUnits()){
 		UnitType UT = u->getType();
 		if (IsBuilding(u)){
@@ -46,12 +51,11 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 	static UnitType test_UT = UnitTypes::None;
 	static int test_fr = 0;
 	int C = r.C * 2 + 2;
-	res.cb.gas = true;
-	res.cb.gas2 = true;
+	res.cb.gas2 = res.cb.gas = r.number[UnitTypes::Terran_Barracks] > 0;
 	// GATE CONDITION
 	if (Broodwar->self()->minerals() <= r.resource.mineral) return res;
 	// SCV
-	if (r.number[UnitTypes::Terran_SCV] < r.wk){
+	if (r.number[UnitTypes::Terran_SCV] < r.wk && r.idle[UnitTypes::Terran_Command_Center]){
 		test_UT = UnitTypes::Terran_SCV;
 		test_fr = Broodwar->getFrameCount();
 		res.bb.busno = ++busno;
@@ -65,8 +69,32 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 		res.cb.UT = UnitTypes::Terran_Supply_Depot;
 		return res;
 	}
-
+	/*
 	// BARRACK
+	if (r.number[UnitTypes::Terran_Supply_Depot] - r._number[UnitTypes::Terran_Supply_Depot] > 0 && r.number[UnitTypes::Terran_Barracks] == 0){
+		res.cb.busno = ++busno;
+		res.cb.UT = UnitTypes::Terran_Barracks;
+		return res;
+	}
 
 	// FACTORY
+	if (r.number[UnitTypes::Terran_Factory] == 0 && r.number[UnitTypes::Terran_Barracks] > 0){
+		res.cb.busno = ++busno;
+		res.cb.UT = UnitTypes::Terran_Factory;
+		return res;
+	}
+
+	// Marine
+	if (r.number[UnitTypes::Terran_Factory] - r._number[UnitTypes::Terran_Factory] == 0 && r.idle[UnitTypes::Terran_Barracks]){
+		res.bb.busno = ++busno;
+		res.bb.UT = UnitTypes::Terran_Marine;
+		return res;
+	}
+	// Vulture
+	if (r.idle[UnitTypes::Terran_Factory]){
+		res.bb.busno = ++busno;
+		res.bb.UT = UnitTypes::Terran_Vulture;
+		return res;
+	}
+	*/
 }

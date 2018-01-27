@@ -71,6 +71,6 @@ struct PMBus{
 	//
 	Resource resource;			// FROM MANAGER
 	map<UnitType, int> list;	// CONSTRUCT PLAN LIST from WORKER
-	PMBus(){}
-	PMBus(Resource res, map<UnitType, int> _info) :resource(res), list(_info){}
+	PMBus(){ wk = 0; }
+	PMBus(Resource res, map<UnitType, int> _info) :resource(res), list(_info){ wk = 0; }
 };
