@@ -54,6 +54,7 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 	res.cb.gas2 = res.cb.gas = r.number[UnitTypes::Terran_Barracks] > 0;
 	// GATE CONDITION
 	if (Broodwar->self()->minerals() <= r.resource.mineral) return res;
+
 	// SCV
 	if (r.number[UnitTypes::Terran_SCV] < r.wk && r.idle[UnitTypes::Terran_Command_Center]){
 		test_UT = UnitTypes::Terran_SCV;
@@ -62,6 +63,7 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 		res.bb.UT = UnitTypes::Terran_SCV;
 		return res;
 	}
+
 	// DEPOT
 	if (Broodwar->self()->supplyTotal() + building_depot * 16 - Broodwar->self()->supplyUsed() <= C && Broodwar->self()->supplyTotal() + building_depot < 400 &&
 		!(test_fr + 10 > Broodwar->getFrameCount() && test_UT == UnitTypes::Terran_Supply_Depot)){ // C = PRODUCING BUILDINGS * 2
@@ -69,7 +71,6 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 		res.cb.UT = UnitTypes::Terran_Supply_Depot;
 		return res;
 	}
-	/*
 	// BARRACK
 	if (r.number[UnitTypes::Terran_Supply_Depot] - r._number[UnitTypes::Terran_Supply_Depot] > 0 && r.number[UnitTypes::Terran_Barracks] == 0){
 		res.cb.busno = ++busno;
@@ -96,5 +97,6 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 		res.bb.UT = UnitTypes::Terran_Vulture;
 		return res;
 	}
-	*/
+
+	return res;
 }
