@@ -18,7 +18,7 @@ void tWorker::mine(){
 			Unit M = NULL;
 			if (centre){
 				int min = 0;
-				for (auto& m : u->getUnitsInRadius(400)){
+				for (auto& m : centre->getUnitsInRadius(400)){
 					if (!IsMineralField(m)) continue;
 					if (min == 0 || min < m->getResources()){
 						min = m->getResources();
