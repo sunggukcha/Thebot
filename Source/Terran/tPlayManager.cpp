@@ -148,7 +148,7 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 bool tPlaymanager::ok(PMBus r, UnitType UT){
 	if (Broodwar->self()->minerals() >= r.resource.mineral + UT.mineralPrice() &&
 		Broodwar->self()->gas() >= r.resource.gas + UT.gasPrice() &&
-		r.idle[UT.whatBuilds().first]) return true;
+		r.idle[UT.whatBuilds().first] && Broodwar->self()->supplyTotal() >= Broodwar->self()->supplyUsed() + UT.supplyRequired()) return true;
 	return false;
 }
 
