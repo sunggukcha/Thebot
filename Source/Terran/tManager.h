@@ -14,6 +14,7 @@ using namespace std;
 class tManager{
 private:
 	PMBus pmbus;
+	map<UnitType, int> bbus;
 	unsigned mineral;
 	unsigned gas;
 private:
@@ -30,6 +31,7 @@ public:
 	void push(Unit);
 	void pop(Unit);
 	void add(Resource r){ mineral += r.mineral; gas += r.gas; }
+	void add(BBus bb){ mineral += bb.mineral; gas += bb.gas; bbus = bb.list; }
 	void add(PMBus pb){ mineral += pb.resource.mineral; gas += pb.resource.gas; pmbus = pb; }
 	Resource res(){ Resource r(mineral, gas); mineral = gas = 0; return r; }
 };

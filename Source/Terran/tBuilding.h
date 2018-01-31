@@ -13,6 +13,7 @@ private:
 	vector<UnitType> uorder;
 	vector<UpgradeType> uporder;
 	vector<TechType> rorder;
+	map<UnitType, int> _list; // LIST : ADDON PLANS
 private:
 	unsigned mineral;
 	unsigned gas;
@@ -20,7 +21,7 @@ private:
 	void upgrade();
 	void research();
 public:
-	Resource refresh(BuildBus);
+	BBus refresh(BuildBus);
 	/*
 	void push(Unit);		// COMPLETE
 	void pop(Unit);			// DESTROY

@@ -21,8 +21,11 @@ public:
 		kinds.push_back(UnitTypes::Terran_Supply_Depot);
 		kinds.push_back(UnitTypes::Terran_Barracks);
 		kinds.push_back(UnitTypes::Terran_Factory);
+		kinds.push_back(UnitTypes::Terran_Machine_Shop);
 		kinds.push_back(UnitTypes::Terran_Starport);
 	}
 	Bus refresh(PMBus);
 	bool ok(PMBus, UnitType); // RETURNS IF THE UT IS TRAINABLE
+	bool ok(PMBus, TechType);
+	bool ok(PMBus, UpgradeType);
 };

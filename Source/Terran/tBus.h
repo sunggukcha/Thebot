@@ -51,6 +51,12 @@ struct Resource{
 	Resource(int m, int g) :mineral(m), gas(g){}
 };
 
+struct BBus : Resource{
+	map<UnitType, int> list;
+	BBus(){}
+	BBus(Resource r, map<UnitType, int> _list) :Resource(r.mineral, r.gas), list(_list) {}
+};
+
 struct Info{
 	Unit SCV;
 	UnitType UT;
@@ -66,6 +72,7 @@ struct PMBus{
 	// BETWEEN PLAMANAGER
 	unsigned short wk;			// WORKER REQUIRED NUMBER
 	unsigned C;					// TRAINING BUILDINGS
+	map<UnitType, int> addons;
 	map<UnitType, int> number, _number; // number for complete number, _number for incomplete number of the UT
 	map<UnitType, bool> idle;
 	//

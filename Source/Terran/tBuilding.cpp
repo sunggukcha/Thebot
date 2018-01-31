@@ -8,7 +8,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
-Resource tBuilding::refresh(BuildBus bb){
+BBus tBuilding::refresh(BuildBus bb){
 	if (bb.busno > busno){
 		if (bb.UpT != UpgradeTypes::None)
 			uporder.push_back(bb.UpT);
@@ -25,7 +25,8 @@ Resource tBuilding::refresh(BuildBus bb){
 	research();
 	//must return reserved orders to playmanager 
 	Resource res(mineral, gas);
-	return res;
+	BBus res2(res, _list);
+	return res2;
 }
 
 void tBuilding::train(){
@@ -37,7 +38,14 @@ void tBuilding::train(){
 		if (table.find(UT) != table.end()){ // if there are buildings that can produce
 			bool made = false;
 			for (auto& u : table[UT]){
-				if (u->canTrain(ut) && u->isIdle()){
+				if (ut.isAddon()){
+					if (u->canBuildAddon() && u->isIdle()){
+						u->buildAddon(ut);
+						made = true;
+						break;
+					}
+				}
+				else if (u->canTrain(ut) && u->isIdle()){
 					u->train(ut);
 					made = true;
 					break;
@@ -51,6 +59,11 @@ void tBuilding::train(){
 		}
 	}
 	uorder = torder;
+	_list.clear();
+	for (auto &u : uorder){
+		if (!u.isAddon()) continue;
+		_list.find(u) != _list.end() ? _list[u]++ : _list[u] = 1;
+	}
 }
 
 void tBuilding::upgrade(){

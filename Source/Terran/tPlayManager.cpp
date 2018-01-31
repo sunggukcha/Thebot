@@ -25,6 +25,11 @@ Bus tPlaymanager::refresh(PMBus r){
 		//n[u.first] = u.second;
 		_n[u.first] = u.second;
 	}
+	for (auto& u : r.addons){
+		if (_n.find(u.first) == _n.end())
+			idle[u.first] = false;
+		_n[u.first] = u.second;
+	}
 	for (auto& u : Broodwar->self()->getUnits()){
 		UnitType UT = u->getType();
 		if (IsBuilding(u)){
@@ -86,16 +91,54 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 		return res;
 	}
 
+	// MACHINE_SHOP
+	if (r.number[UnitTypes::Terran_Machine_Shop] + r._number[UnitTypes::Terran_Machine_Shop] < (r.number[UnitTypes::Terran_Factory] + r._number[UnitTypes::Terran_Factory]) / 2 &&
+		r.number[UnitTypes::Terran_Factory] > 0){
+		res.bb.busno = ++busno;
+		res.bb.UT = UnitTypes::Terran_Machine_Shop;
+		return res;
+	}
+
+	///		SQUAD
+
 	// Marine
-	if (r.number[UnitTypes::Terran_Factory] - r._number[UnitTypes::Terran_Factory] == 0 && ok(r, UnitTypes::Terran_Marine)){
+	if (r.number[UnitTypes::Terran_Factory] == 0 && ok(r, UnitTypes::Terran_Marine)){
 		res.bb.busno = ++busno;
 		res.bb.UT = UnitTypes::Terran_Marine;
 		return res;
 	}
+
+	// Tank
+	if (ok(r, UnitTypes::Terran_Siege_Tank_Tank_Mode) && r.number[UnitTypes::Terran_Machine_Shop] > 0){
+		res.bb.busno = ++busno;
+		res.bb.UT = UnitTypes::Terran_Siege_Tank_Tank_Mode;
+		return res;
+	}
+
 	// Vulture
 	if (ok(r, UnitTypes::Terran_Vulture)){
 		res.bb.busno = ++busno;
 		res.bb.UT = UnitTypes::Terran_Vulture;
+		return res;
+	}
+
+	///		RESEARCH
+
+	// VULTURE
+	// MINE & BOOST
+	if (r.number[UnitTypes::Terran_Machine_Shop] > 0 && ok(r, TechTypes::Spider_Mines)){
+		res.bb.busno = ++busno;
+		res.bb.TT = TechTypes::Spider_Mines;
+		return res;
+	}
+	else if (r.number[UnitTypes::Terran_Machine_Shop] > 0 && ok(r, UpgradeTypes::Ion_Thrusters)){
+		res.bb.busno = ++busno;
+		res.bb.UpT = UpgradeTypes::Ion_Thrusters;
+		return res;
+	}
+	else if (r.number[UnitTypes::Terran_Machine_Shop] > 0 && ok(r, TechTypes::Tank_Siege_Mode)){
+		res.bb.busno = ++busno;
+		res.bb.TT = TechTypes::Tank_Siege_Mode;
 		return res;
 	}
 
@@ -106,5 +149,21 @@ bool tPlaymanager::ok(PMBus r, UnitType UT){
 	if (Broodwar->self()->minerals() >= r.resource.mineral + UT.mineralPrice() &&
 		Broodwar->self()->gas() >= r.resource.gas + UT.gasPrice() &&
 		r.idle[UT.whatBuilds().first]) return true;
+	return false;
+}
+
+bool tPlaymanager::ok(PMBus r, TechType UT){
+	if (Broodwar->self()->hasResearched(UT)) return false;
+	if (Broodwar->self()->minerals() >= r.resource.mineral + UT.mineralPrice() &&
+		Broodwar->self()->gas() >= r.resource.gas + UT.gasPrice() &&
+		r.idle[UT.whatResearches()]) return true;
+	return false;
+}
+
+bool tPlaymanager::ok(PMBus r, UpgradeType UT){
+	if (Broodwar->self()->getUpgradeLevel(UT) == Broodwar->self()->getMaxUpgradeLevel(UT)) return false;
+	if (Broodwar->self()->minerals() >= r.resource.mineral + UT.mineralPrice() &&
+		Broodwar->self()->gas() >= r.resource.gas + UT.gasPrice() &&
+		r.idle[UT.whatUpgrades()]) return true;
 	return false;
 }
