@@ -40,7 +40,7 @@ Bus tPlaymanager::refresh(PMBus r){
 				if (!u->isCompleted()) building_depot++;
 			}
 			if (u->isTraining()) C++;
-			else idle[UT] = true;
+			else if (u->isCompleted()) idle[UT] = true;
 		}
 		n.find(UT) != n.end() ? n[UT]++ : n[UT] = 0;
 		if (!u->isCompleted()) _n.find(UT) != _n.end() ? _n[UT]++ : _n[UT] = 0;
@@ -80,7 +80,7 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 	}
 
 	// FACTORY
-	if (r.number[UnitTypes::Terran_Factory] + r._number[UnitTypes::Terran_Factory] == 0 && r.number[UnitTypes::Terran_Barracks] > 0){
+	if (r.number[UnitTypes::Terran_Factory] + r._number[UnitTypes::Terran_Factory] < 2 && r.number[UnitTypes::Terran_Barracks] > 0){
 		res.cb.busno = ++busno;
 		res.cb.UT = UnitTypes::Terran_Factory;
 		return res;

@@ -8,6 +8,8 @@ using namespace BWAPI;
 using namespace Filter;
 using namespace std;
 
+// DEPOT		3 * 2
+// BARRAKCS		4 * 3
 #define unitX UnitTypes::Terran_Supply_Depot.tileWidth() / 3
 #define unitY UnitTypes::Terran_Supply_Depot.tileHeight() / 2
 int units[4][2] = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };

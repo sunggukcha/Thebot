@@ -77,11 +77,11 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position 
 			continue;
 		}
 		bool attack = false;
-		Unit target;
+		Unit target = NULL;
 		int min = 0;
 		bool kill = false;
 		double value = 0.0;
-		for (auto& e : u->getUnitsInWeaponRange(u->getType().airWeapon())){
+		for (auto& e : u->getUnitsInRadius(u->getType().airWeapon().maxRange())){
 			if (!IsEnemy(e)) continue;
 			if (hp[e] <= 0) continue;
 			UnitType mt, et;
@@ -111,7 +111,7 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position 
 				target = e;
 			}
 		}
-		for (auto& e : u->getUnitsInWeaponRange(u->getType().groundWeapon())){
+		for (auto& e : u->getUnitsInRadius(u->getType().groundWeapon().maxRange())){
 			if (!IsEnemy(e)) continue;
 			if (hp[e] <= 0) continue;
 			UnitType mt, et;
