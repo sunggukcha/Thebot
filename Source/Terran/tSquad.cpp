@@ -45,10 +45,15 @@ float Emperor_Junyoung::damage_ratio(Unit u, Unit target){
 	return 1.0;
 }
 
-void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave){
-	map<Unit, int> hp;
-	for (auto& u : earmy)
-		hp[u] = u->getHitPoints() + u->getShields();
+void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned interval){
+	if (myarmy.size() == 0) return;
+	static map<Unit, int> hp;
+	static unsigned frame = 0;
+	if (frame + interval / myarmy.size() < Broodwar->getFrameCount()){
+		frame = Broodwar->getFrameCount();
+		for (auto& u : earmy)
+			hp[u] = u->getHitPoints() + u->getShields();
+	}
 	for (auto& u : myarmy){
 		if (u->getGroundWeaponCooldown() + u->getAirWeaponCooldown() > 0){
 			// move forward or backward
@@ -194,5 +199,5 @@ void tSquad::refresh(){
 		}
 	}, nullptr, Broodwar->getLatencyFrames());
 
-	Junyoung.battle(army, enemy, (Position) target);
+	Junyoung.battle(army, enemy, (Position) target, interval);
 }

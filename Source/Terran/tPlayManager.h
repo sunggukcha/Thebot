@@ -24,4 +24,5 @@ public:
 		kinds.push_back(UnitTypes::Terran_Starport);
 	}
 	Bus refresh(PMBus);
+	bool ok(PMBus, UnitType); // RETURNS IF THE UT IS TRAINABLE
 };

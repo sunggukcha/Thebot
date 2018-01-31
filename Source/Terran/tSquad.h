@@ -12,12 +12,13 @@ private:
 	float damage_ratio(Unit, Unit);
 public:
 	bool isFight();
-	void battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave);
+	void battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned interval);
 };
 
 class tSquad{
 private:
 	// Target Positioning
+	unsigned interval;
 	bool search;
 	bool targ;
 	vector<TilePosition> startlocations;
@@ -30,6 +31,7 @@ private:
 	TilePosition target;
 public:
 	void start(){
+		interval = 0;
 		search = true;
 		for (auto& base : Broodwar->getStartLocations())
 			startlocations.push_back(base);
@@ -40,9 +42,25 @@ public:
 public:
 	void discover(Unit u){ if (find(enemy.begin(), enemy.end(), u) == enemy.end()) enemy.push_back(u); }
 	void discover(TilePosition tp){ if (find(targets.begin(), targets.end(), tp) == targets.end()) targets.push_back(tp); }
-	void push(Unit u){ army.push_back(u); }
+	void push(Unit u){
+		army.push_back(u);
+		if (u->getType().groundWeapon().damageCooldown() > 0 && u->getType().airWeapon().damageCooldown() > 0)
+			interval += (u->getType().groundWeapon().damageCooldown() + u->getType().airWeapon().damageCooldown()) / 2;
+		else if (u->getType().groundWeapon().damageCooldown() == 0 && u->getType().airWeapon().damageCooldown() > 0)
+			interval += u->getType().airWeapon().damageCooldown();
+		else if (u->getType().airWeapon().damageCooldown() == 0 && u->getType().groundWeapon().damageCooldown() > 0)
+			interval += u->getType().groundWeapon().damageCooldown();
+	}
 	void pop(Unit u){
-		if (IsOwned(u)) army.erase(find(army.begin(), army.end(), u));
+		if (IsOwned(u)){
+			army.erase(find(army.begin(), army.end(), u));
+			if (u->getType().groundWeapon().damageCooldown() > 0 && u->getType().airWeapon().damageCooldown() > 0)
+				interval -= (u->getType().groundWeapon().damageCooldown() + u->getType().airWeapon().damageCooldown()) / 2;
+			else if (u->getType().groundWeapon().damageCooldown() == 0 && u->getType().airWeapon().damageCooldown() > 0)
+				interval -= u->getType().airWeapon().damageCooldown();
+			else if (u->getType().airWeapon().damageCooldown() == 0 && u->getType().groundWeapon().damageCooldown() > 0)
+				interval -= u->getType().groundWeapon().damageCooldown();
+		}
 		else{
 			for (auto &e : enemy){
 				if (u->getID() == e->getID()){

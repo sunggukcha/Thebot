@@ -42,8 +42,8 @@ Bus tPlaymanager::refresh(PMBus r){
 			if (u->isTraining()) C++;
 			else if (u->isCompleted()) idle[UT] = true;
 		}
-		n.find(UT) != n.end() ? n[UT]++ : n[UT] = 0;
 		if (!u->isCompleted()) _n.find(UT) != _n.end() ? _n[UT]++ : _n[UT] = 0;
+		else n.find(UT) != n.end() ? n[UT]++ : n[UT] = 0;
 	}
 	b.bb.table = table;
 	r.C = C;
@@ -55,12 +55,12 @@ Bus tPlaymanager::refresh(PMBus r){
 
 Bus tPlaymanager::test(Bus res, PMBus r){
 	int C = r.C * 2 + 2;
-	res.cb.gas2 = res.cb.gas = r.number[UnitTypes::Terran_Barracks] > 0;
+	res.cb.gas2 = res.cb.gas = r.number[UnitTypes::Terran_Barracks] + r._number[UnitTypes::Terran_Barracks] > 0;
 	// GATE CONDITION
 	if (Broodwar->self()->minerals() <= r.resource.mineral) return res;
 
 	// SCV
-	if (r.number[UnitTypes::Terran_SCV] < r.wk && r.idle[UnitTypes::Terran_Command_Center]){
+	if (r.number[UnitTypes::Terran_SCV] < r.wk && ok(r, UnitTypes::Terran_SCV)){
 		res.bb.busno = ++busno;
 		res.bb.UT = UnitTypes::Terran_SCV;
 		return res;
@@ -73,7 +73,7 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 		return res;
 	}
 	// BARRACK
-	if (r.number[UnitTypes::Terran_Supply_Depot] + r._number[UnitTypes::Terran_Supply_Depot] > 0 && r.number[UnitTypes::Terran_Barracks] + r._number[UnitTypes::Terran_Barracks] == 0){
+	if (r.number[UnitTypes::Terran_Supply_Depot] > 0 && r.number[UnitTypes::Terran_Barracks] + r._number[UnitTypes::Terran_Barracks] == 0){
 		res.cb.busno = ++busno;
 		res.cb.UT = UnitTypes::Terran_Barracks;
 		return res;
@@ -87,17 +87,24 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 	}
 
 	// Marine
-	if (r.number[UnitTypes::Terran_Factory] - r._number[UnitTypes::Terran_Factory] == 0 && r.idle[UnitTypes::Terran_Barracks]){
+	if (r.number[UnitTypes::Terran_Factory] - r._number[UnitTypes::Terran_Factory] == 0 && ok(r, UnitTypes::Terran_Marine)){
 		res.bb.busno = ++busno;
 		res.bb.UT = UnitTypes::Terran_Marine;
 		return res;
 	}
 	// Vulture
-	if (r.idle[UnitTypes::Terran_Factory]){
+	if (ok(r, UnitTypes::Terran_Vulture)){
 		res.bb.busno = ++busno;
 		res.bb.UT = UnitTypes::Terran_Vulture;
 		return res;
 	}
 
 	return res;
+}
+
+bool tPlaymanager::ok(PMBus r, UnitType UT){
+	if (Broodwar->self()->minerals() >= r.resource.mineral + UT.mineralPrice() &&
+		Broodwar->self()->gas() >= r.resource.gas + UT.gasPrice() &&
+		r.idle[UT.whatBuilds().first]) return true;
+	return false;
 }
