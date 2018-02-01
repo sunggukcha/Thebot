@@ -8,11 +8,15 @@ using namespace Filter;
 
 class Emperor_Junyoung{
 private:
+	map<Unit, int> hp;
+	unsigned frame;
 	enum armortype {small, medium, large};
 	float damage_ratio(Unit, Unit);
 public:
+	Emperor_Junyoung(){ frame = 0; }
 	bool isFight();
 	void battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned interval);
+	bool fight(Unit, Position); // true if the unit is ordered
 };
 
 class tSquad{

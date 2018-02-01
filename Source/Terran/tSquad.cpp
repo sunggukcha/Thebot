@@ -47,14 +47,13 @@ float Emperor_Junyoung::damage_ratio(Unit u, Unit target){
 
 void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned interval){
 	if (myarmy.size() == 0) return;
-	static map<Unit, int> hp;
-	static unsigned frame = 0;
 	if (frame + interval / myarmy.size() < Broodwar->getFrameCount()){
 		frame = Broodwar->getFrameCount();
 		for (auto& u : earmy)
 			hp[u] = u->getHitPoints() + u->getShields();
 	}
 	for (auto& u : myarmy){
+		if (fight(u, ave)) continue;
 		if (u->getGroundWeaponCooldown() + u->getAirWeaponCooldown() > 0){
 			// move forward or backward
 			// if weapon in cooldown / 2, position in maximum range
@@ -158,6 +157,15 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position 
 			u->attack(ave);
 		}
 	}
+}
+
+bool Emperor_Junyoung::fight(Unit u, Position ave){
+	UnitType UT = u->getType();
+	if (UT == UnitTypes::Terran_Vulture){
+		Unit e = u->getClosestUnit(IsEnemy && !IsFlying, UT.sightRange());
+		return true;
+	}
+	return false;
 }
 
 void tSquad::refresh(){
