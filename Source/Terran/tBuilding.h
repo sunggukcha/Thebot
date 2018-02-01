@@ -9,6 +9,7 @@ using namespace std;
 class tBuilding{
 private:
 	unsigned busno;
+	unsigned short _i;
 	map<UnitType, vector<Unit>> table; // Hash Table that saves buildings
 	vector<UnitType> uorder;
 	vector<UpgradeType> uporder;

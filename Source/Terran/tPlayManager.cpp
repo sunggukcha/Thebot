@@ -77,6 +77,7 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 		res.cb.UT = UnitTypes::Terran_Supply_Depot;
 		return res;
 	}
+
 	// BARRACK
 	if (r.number[UnitTypes::Terran_Supply_Depot] > 0 && r.number[UnitTypes::Terran_Barracks] + r._number[UnitTypes::Terran_Barracks] == 0){
 		res.cb.busno = ++busno;
@@ -109,7 +110,7 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 	}
 
 	// Tank
-	if (ok(r, UnitTypes::Terran_Siege_Tank_Tank_Mode) && r.number[UnitTypes::Terran_Machine_Shop] > 0){
+	if (ok(r, UnitTypes::Terran_Siege_Tank_Tank_Mode) && r.number[UnitTypes::Terran_Machine_Shop] > 0 && r.number[UnitTypes::Terran_Machine_Shop] > r._number[UnitTypes::Terran_Siege_Tank_Tank_Mode]){
 		res.bb.busno = ++busno;
 		res.bb.UT = UnitTypes::Terran_Siege_Tank_Tank_Mode;
 		return res;
@@ -126,17 +127,21 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 
 	// VULTURE
 	// MINE & BOOST
-	if (r.number[UnitTypes::Terran_Machine_Shop] > 0 && ok(r, TechTypes::Spider_Mines)){
+	static bool _mine = true, _ion = true, _siege = true;
+	if (r.number[UnitTypes::Terran_Machine_Shop] > 0 && ok(r, TechTypes::Spider_Mines) && _mine){
+		_mine = false;
 		res.bb.busno = ++busno;
 		res.bb.TT = TechTypes::Spider_Mines;
 		return res;
 	}
-	else if (r.number[UnitTypes::Terran_Machine_Shop] > 0 && ok(r, UpgradeTypes::Ion_Thrusters)){
+	else if (r.number[UnitTypes::Terran_Machine_Shop] > 0 && ok(r, UpgradeTypes::Ion_Thrusters) && _ion){
+		_ion = false;
 		res.bb.busno = ++busno;
 		res.bb.UpT = UpgradeTypes::Ion_Thrusters;
 		return res;
 	}
-	else if (r.number[UnitTypes::Terran_Machine_Shop] > 0 && ok(r, TechTypes::Tank_Siege_Mode)){
+	else if (r.number[UnitTypes::Terran_Machine_Shop] > 0 && ok(r, TechTypes::Tank_Siege_Mode) && _siege){
+		_siege = false;
 		res.bb.busno = ++busno;
 		res.bb.TT = TechTypes::Tank_Siege_Mode;
 		return res;

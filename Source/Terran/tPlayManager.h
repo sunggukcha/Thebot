@@ -22,7 +22,13 @@ public:
 		kinds.push_back(UnitTypes::Terran_Barracks);
 		kinds.push_back(UnitTypes::Terran_Factory);
 		kinds.push_back(UnitTypes::Terran_Machine_Shop);
+		kinds.push_back(UnitTypes::Terran_Siege_Tank_Tank_Mode);
 		kinds.push_back(UnitTypes::Terran_Starport);
+		kinds.push_back(UnitTypes::Terran_Control_Tower);
+		kinds.push_back(UnitTypes::Terran_Dropship);
+		kinds.push_back(UnitTypes::Terran_Science_Vessel);
+		kinds.push_back(UnitTypes::Terran_Valkyrie);
+		kinds.push_back(UnitTypes::Terran_Battlecruiser);
 	}
 	Bus refresh(PMBus);
 	bool ok(PMBus, UnitType); // RETURNS IF THE UT IS TRAINABLE

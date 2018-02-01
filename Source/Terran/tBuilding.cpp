@@ -31,7 +31,7 @@ BBus tBuilding::refresh(BuildBus bb){
 
 void tBuilding::train(){
 	vector<UnitType> torder;
-	int _i = 45;
+	_i = 75;
 	for (auto& ut : uorder){
 		UnitType UT = ut.whatBuilds().first; // <UnitType, int>:: 0:cannot, 2:Archons, 1: others
 		Broodwar->drawTextScreen(0, _i, "%s", ut.c_str()); _i += 15;
@@ -39,7 +39,7 @@ void tBuilding::train(){
 			bool made = false;
 			for (auto& u : table[UT]){
 				if (ut.isAddon()){
-					if (u->canBuildAddon() && u->isIdle()){
+					if (u->canBuildAddon(ut) && u->isIdle()){
 						u->buildAddon(ut);
 						made = true;
 						break;
@@ -61,7 +61,7 @@ void tBuilding::train(){
 	uorder = torder;
 	_list.clear();
 	for (auto &u : uorder){
-		if (!u.isAddon()) continue;
+		//if (!u.isAddon()) continue;
 		_list.find(u) != _list.end() ? _list[u]++ : _list[u] = 1;
 	}
 }
@@ -69,6 +69,7 @@ void tBuilding::train(){
 void tBuilding::upgrade(){
 	vector<UpgradeType> torder;
 	for (auto& ut : uporder){
+		Broodwar->drawTextScreen(0, _i, "%s", ut.c_str()); _i += 15;
 		UnitType UT = ut.whatUpgrades();
 		if (table.find(UT) != table.end()){ // if there are buildings that can produce
 			bool made = false;
@@ -92,6 +93,7 @@ void tBuilding::upgrade(){
 void tBuilding::research(){
 	vector<TechType> torder;
 	for (auto& ut : rorder){
+		Broodwar->drawTextScreen(0, _i, "%s", ut.c_str()); _i += 15;
 		UnitType UT = ut.whatResearches();
 		if (table.find(UT) != table.end()){ // if there are buildings that can produce
 			bool made = false;
