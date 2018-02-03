@@ -256,8 +256,14 @@ void tSquad::refresh(){
 	}, nullptr, Broodwar->getLatencyFrames());
 
 	target = Junyoung.battle(army, enemy, (Position) target, interval);
-	if (target == TilePositions::None)
-		search = true;
+	if (target == TilePositions::None){
+		if (targets.empty())
+			search = true;
+		else{
+			target = targets.front();
+			search = false;
+		}
+	}
 	else
 		search = false;
 }
