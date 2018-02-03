@@ -29,6 +29,7 @@ private:
 	vector<TilePosition> multilocations;
 private:
 	Emperor_Junyoung Junyoung;
+	map<UnitType, unsigned short> Ns;
 	vector<Unit> army;
 	vector<Unit> enemy;
 	vector<TilePosition> targets;
@@ -47,16 +48,25 @@ public:
 	void discover(Unit u){ if (find(enemy.begin(), enemy.end(), u) == enemy.end()) enemy.push_back(u); }
 	void discover(TilePosition tp){ if (find(targets.begin(), targets.end(), tp) == targets.end()) targets.push_back(tp); }
 	void push(Unit u){
-		army.push_back(u);
-		if (u->getType().groundWeapon().damageCooldown() > 0 && u->getType().airWeapon().damageCooldown() > 0)
-			interval += (u->getType().groundWeapon().damageCooldown() + u->getType().airWeapon().damageCooldown()) / 2;
-		else if (u->getType().groundWeapon().damageCooldown() == 0 && u->getType().airWeapon().damageCooldown() > 0)
-			interval += u->getType().airWeapon().damageCooldown();
-		else if (u->getType().airWeapon().damageCooldown() == 0 && u->getType().groundWeapon().damageCooldown() > 0)
-			interval += u->getType().groundWeapon().damageCooldown();
+		if (IsOwned(u)){
+			UnitType UT = u->getType();
+			if (Ns.find(UT) != Ns.end())
+				Ns[UT]++;
+			else
+				Ns[UT] = 1;
+			army.push_back(u);
+			if (u->getType().groundWeapon().damageCooldown() > 0 && u->getType().airWeapon().damageCooldown() > 0)
+				interval += (u->getType().groundWeapon().damageCooldown() + u->getType().airWeapon().damageCooldown()) / 2;
+			else if (u->getType().groundWeapon().damageCooldown() == 0 && u->getType().airWeapon().damageCooldown() > 0)
+				interval += u->getType().airWeapon().damageCooldown();
+			else if (u->getType().airWeapon().damageCooldown() == 0 && u->getType().groundWeapon().damageCooldown() > 0)
+				interval += u->getType().groundWeapon().damageCooldown();
+		}
 	}
 	void pop(Unit u){
 		if (IsOwned(u)){
+			UnitType UT = u->getType();
+			Ns[UT]--;
 			army.erase(find(army.begin(), army.end(), u));
 			if (u->getType().groundWeapon().damageCooldown() > 0 && u->getType().airWeapon().damageCooldown() > 0)
 				interval -= (u->getType().groundWeapon().damageCooldown() + u->getType().airWeapon().damageCooldown()) / 2;

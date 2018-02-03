@@ -201,14 +201,14 @@ bool Emperor_Junyoung::fight(Unit u, unsigned short N, Position ave){
 		//return true;
 	}
 	else if (UT == UnitTypes::Terran_Siege_Tank_Tank_Mode){
-		Unit e = u->getClosestUnit(IsEnemy && !IsFlying, 196);
+		Unit e = u->getClosestUnit(IsEnemy && !IsFlying, 384);
 		if (u->canSiege() && e){
 			u->siege();
 			return true;
 		}
 	}
 	else if (UT == UnitTypes::Terran_Siege_Tank_Siege_Mode){
-		Unit e = u->getClosestUnit(IsEnemy && !IsFlying, 196);
+		Unit e = u->getClosestUnit(IsEnemy && !IsFlying, 384);
 		if (!e && u->getGroundWeaponCooldown() == 0){
 			u->unsiege();
 		}
@@ -254,16 +254,18 @@ void tSquad::refresh(){
 			Broodwar->drawCircleMap(targe, 150, Colors::Red);
 		}
 	}, nullptr, Broodwar->getLatencyFrames());
-
-	target = Junyoung.battle(army, enemy, (Position) target, interval);
-	if (target == TilePositions::None){
-		if (targets.empty())
-			search = true;
-		else{
-			target = targets.front();
-			search = false;
+	if (search);
+	else{
+		target = Junyoung.battle(army, enemy, (Position)target, interval);
+		if (target == TilePositions::None){
+			if (targets.empty())
+				search = true;
+			else{
+				target = targets.front();
+				search = false;
+			}
 		}
+		else
+			search = false;
 	}
-	else
-		search = false;
 }
