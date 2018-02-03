@@ -15,7 +15,7 @@ private:
 public:
 	Emperor_Junyoung(){ frame = 0; }
 	bool isFight();
-	TilePosition battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned short interval);
+	TilePosition battle(vector<Unit> myarmy, vector<Unit> earmy, map<UnitType, unsigned short> Ns, Position ave, unsigned short interval);
 	bool fight(Unit, unsigned short the_number_of_the_UT, Position); // true if the unit is ordered
 };
 
@@ -37,7 +37,7 @@ private:
 public:
 	void start(){
 		interval = 0;
-		search = true;
+		search = false;
 		for (auto& base : Broodwar->getStartLocations())
 			startlocations.push_back(base);
 		for (auto &base : BWTA::getBaseLocations())

@@ -45,7 +45,7 @@ float Emperor_Junyoung::damage_ratio(Unit u, Unit target){
 	return 1.0;
 }
 
-TilePosition Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned short interval){
+TilePosition Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, map<UnitType, unsigned short> Ns, Position ave, unsigned short interval){
 	TilePosition res = (TilePosition)ave;
 
 	if (myarmy.size() == 0) return res;
@@ -68,6 +68,9 @@ TilePosition Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, P
 			res = eb->getTilePosition();
 		}
 		if (fight(u, interval, ave)) continue;
+
+		if (u->getLastCommandFrame() + Ns[u->getType()] / 10 > Broodwar->getFrameCount()) continue;
+
 		if (u->getGroundWeaponCooldown() + u->getAirWeaponCooldown() > 0){
 			// move forward or backward
 			// if weapon in cooldown / 2, position in maximum range
@@ -256,7 +259,7 @@ void tSquad::refresh(){
 	}, nullptr, Broodwar->getLatencyFrames());
 	if (search);
 	else{
-		target = Junyoung.battle(army, enemy, (Position)target, interval);
+		target = Junyoung.battle(army, enemy, Ns, (Position)target, interval);
 		if (target == TilePositions::None){
 			if (targets.empty())
 				search = true;
