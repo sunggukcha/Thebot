@@ -269,3 +269,24 @@ void tSquad::refresh(){
 			search = false;
 	}
 }
+
+void tSquad::Search(vector<Unit> myarmy){
+	static int k = 0;
+	int i = 0;
+	TilePosition res;
+	for (auto& u : multilocations){
+		if (Broodwar->isVisible(u)) continue;
+		if (i++ == k){
+			res = u;
+			break;
+		}
+	}
+	for (auto& u : myarmy){
+		if (u->isIdle()){
+			if (u->canAttackMove())
+				u->attack((Position)res);
+			else
+				u->move((Position)res);
+		}
+	}
+}

@@ -44,6 +44,7 @@ public:
 			multilocations.push_back(base->getTilePosition());
 	}
 	void refresh();
+	void Search(vector<Unit> myarmy);
 public:
 	void discover(Unit u){ if (find(enemy.begin(), enemy.end(), u) == enemy.end()) enemy.push_back(u); }
 	void discover(TilePosition tp){ if (find(targets.begin(), targets.end(), tp) == targets.end()) targets.push_back(tp); }
