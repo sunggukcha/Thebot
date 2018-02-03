@@ -45,7 +45,7 @@ float Emperor_Junyoung::damage_ratio(Unit u, Unit target){
 	return 1.0;
 }
 
-void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned interval){
+void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned short interval){
 	if (myarmy.size() == 0) return;
 	if (frame + interval / myarmy.size() < Broodwar->getFrameCount()){
 		frame = Broodwar->getFrameCount();
@@ -53,7 +53,7 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position 
 			hp[u] = u->getHitPoints() + u->getShields();
 	}
 	for (auto& u : myarmy){
-		if (fight(u, ave)) continue;
+		if (fight(u, interval, ave)) continue;
 		if (u->getGroundWeaponCooldown() + u->getAirWeaponCooldown() > 0){
 			// move forward or backward
 			// if weapon in cooldown / 2, position in maximum range
@@ -62,20 +62,20 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position 
 				Unit e = u->getClosestUnit(IsEnemy && !IsFlying);
 				if (e){
 					Position ppp;
-					ppp.x = 4 * u->getPosition().x - 3 * e->getPosition().x;
-					ppp.y = 4 * u->getPosition().y - 3 * e->getPosition().y;
+					ppp.x = 7 * u->getPosition().x - 6 * e->getPosition().x;
+					ppp.y = 7 * u->getPosition().y - 6 * e->getPosition().y;
 					ppp.makeValid();
-					u->move(ppp);
+					u->attack(ppp);
 				}
 			}
 			else if (u->getAirWeaponCooldown() >= u->getType().airWeapon().damageCooldown() / 2){
 				Unit e = u->getClosestUnit(IsEnemy && IsFlying);
 				if (e){
 					Position ppp;
-					ppp.x = 4 * u->getPosition().x - 3 * e->getPosition().x;
-					ppp.y = 4 * u->getPosition().y - 3 * e->getPosition().y;
+					ppp.x = 7 * u->getPosition().x - 6 * e->getPosition().x;
+					ppp.y = 7 * u->getPosition().y - 6 * e->getPosition().y;
 					ppp.makeValid();
-					u->move(ppp);
+					u->attack(ppp);
 				}
 			}
 			continue;
@@ -115,7 +115,7 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position 
 				target = e;
 			}
 		}
-		for (auto& e : u->getUnitsInRadius(u->getType().groundWeapon().maxRange())){
+		for (auto& e : u->getUnitsInRadius(u->getType().sightRange())){
 			if (!IsEnemy(e)) continue;
 			if (hp[e] <= 0) continue;
 			UnitType mt, et;
@@ -159,11 +159,44 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position 
 	}
 }
 
-bool Emperor_Junyoung::fight(Unit u, Position ave){
+bool Emperor_Junyoung::fight(Unit u, unsigned short N, Position ave){
 	UnitType UT = u->getType();
 	if (UT == UnitTypes::Terran_Vulture){
-		Unit e = u->getClosestUnit(IsEnemy && !IsFlying, UT.sightRange());
-		return true;
+		// if (u->getLastCommand().getType() == UnitCommandTypes::Use_Tech && u->getLastCommandFrame() + 100 > Broodwar->getFrameCount()) return true;
+
+//		Unit e = u->getClosestUnit(IsEnemy && !IsFlying, UT.sightRange());
+		if (u->getSpiderMineCount() > 0 && Broodwar->self()->hasResearched(TechTypes::Spider_Mines)){
+			if (u->getLastCommandFrame() + 20 > Broodwar->getFrameCount()) return true;
+			Unit mine = u->getClosestUnit(IsOwned && GetType == UnitTypes::Terran_Vulture_Spider_Mine, 100);
+			Unit enemy = u->getClosestUnit(IsEnemy, UT.sightRange());
+			if ((mine || enemy)){
+				if (mine){
+					if (u->getDistance(mine) < 50) return false;
+				}
+				Position p = (Position)u->getTilePosition();
+				Position _p = u->getPosition();
+				u->useTech(TechTypes::Spider_Mines, _p);
+				Broodwar->registerEvent([u](Game*)
+				{
+					Broodwar->drawCircleMap(u->getPosition(), 3, Colors::Red, true);
+				}, nullptr, Broodwar->getLatencyFrames() + 1);
+				return true;
+			}
+		}
+		//return true;
+	}
+	else if (UT == UnitTypes::Terran_Siege_Tank_Tank_Mode){
+		Unit e = u->getClosestUnit(IsEnemy && !IsFlying, 196);
+		if (u->canSiege() && e){
+			u->siege();
+			return true;
+		}
+	}
+	else if (UT == UnitTypes::Terran_Siege_Tank_Siege_Mode){
+		Unit e = u->getClosestUnit(IsEnemy && !IsFlying, 196);
+		if (!e && u->getGroundWeaponCooldown() == 0){
+			u->unsiege();
+		}
 	}
 	return false;
 }

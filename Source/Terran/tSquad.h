@@ -15,14 +15,14 @@ private:
 public:
 	Emperor_Junyoung(){ frame = 0; }
 	bool isFight();
-	void battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned interval);
-	bool fight(Unit, Position); // true if the unit is ordered
+	void battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned short interval);
+	bool fight(Unit, unsigned short the_number_of_the_UT, Position); // true if the unit is ordered
 };
 
 class tSquad{
 private:
 	// Target Positioning
-	unsigned interval;
+	unsigned short interval;
 	bool search;
 	bool targ;
 	vector<TilePosition> startlocations;

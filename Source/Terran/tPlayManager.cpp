@@ -86,7 +86,7 @@ Bus tPlaymanager::test(Bus res, PMBus r){
 	}
 
 	// FACTORY
-	if (r.number[UnitTypes::Terran_Factory] + r._number[UnitTypes::Terran_Factory] < 2 && r.number[UnitTypes::Terran_Barracks] > 0){
+	if (r.number[UnitTypes::Terran_Factory] + r._number[UnitTypes::Terran_Factory] < 2 + Broodwar->self()->hasResearched(TechTypes::Tank_Siege_Mode) && r.number[UnitTypes::Terran_Barracks] > 0){
 		res.cb.busno = ++busno;
 		res.cb.UT = UnitTypes::Terran_Factory;
 		return res;
