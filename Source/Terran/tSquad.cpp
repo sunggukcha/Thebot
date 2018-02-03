@@ -45,14 +45,28 @@ float Emperor_Junyoung::damage_ratio(Unit u, Unit target){
 	return 1.0;
 }
 
-void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned short interval){
-	if (myarmy.size() == 0) return;
+TilePosition Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned short interval){
+	TilePosition res = (TilePosition)ave;
+
+	if (myarmy.size() == 0) return res;
 	if (frame + interval / myarmy.size() < Broodwar->getFrameCount()){
 		frame = Broodwar->getFrameCount();
 		for (auto& u : earmy)
 			hp[u] = u->getHitPoints() + u->getShields();
 	}
 	for (auto& u : myarmy){
+		Unit eb = u->getClosestUnit(IsEnemy && IsBuilding, u->getType().sightRange());
+		if (u->getDistance(ave) < 10){
+			if (eb) res = eb->getTilePosition();
+			else {
+				Unit eb2 = u->getClosestUnit(IsEnemy && IsBuilding);
+				if (eb2) res = eb2->getTilePosition();
+				else res = TilePositions::None;
+			}
+		}
+		else if (eb){
+			res = eb->getTilePosition();
+		}
 		if (fight(u, interval, ave)) continue;
 		if (u->getGroundWeaponCooldown() + u->getAirWeaponCooldown() > 0){
 			// move forward or backward
@@ -157,6 +171,7 @@ void Emperor_Junyoung::battle(vector<Unit> myarmy, vector<Unit> earmy, Position 
 			u->attack(ave);
 		}
 	}
+	return res;
 }
 
 bool Emperor_Junyoung::fight(Unit u, unsigned short N, Position ave){
@@ -240,5 +255,9 @@ void tSquad::refresh(){
 		}
 	}, nullptr, Broodwar->getLatencyFrames());
 
-	Junyoung.battle(army, enemy, (Position) target, interval);
+	target = Junyoung.battle(army, enemy, (Position) target, interval);
+	if (target == TilePositions::None)
+		search = true;
+	else
+		search = false;
 }

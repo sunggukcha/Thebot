@@ -15,7 +15,7 @@ private:
 public:
 	Emperor_Junyoung(){ frame = 0; }
 	bool isFight();
-	void battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned short interval);
+	TilePosition battle(vector<Unit> myarmy, vector<Unit> earmy, Position ave, unsigned short interval);
 	bool fight(Unit, unsigned short the_number_of_the_UT, Position); // true if the unit is ordered
 };
 
